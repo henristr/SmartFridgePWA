@@ -1,9 +1,0 @@
-{
-  "provider": "gemini",
-  "gemini_api_key": "KEY_HERE",
-  "gemini_model": "gemini-2.5-flash",
-  "openai_api_key": "",
-  "openai_model": "gpt-4o-mini",
-  "ollama_url": "http://localhost:11434/api/generate",
-  "ollama_model": "llama3.2"
-}
