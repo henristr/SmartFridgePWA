@@ -1,0 +1,46 @@
+{
+  "admin": [
+    {
+      "id": "2026-02-28T17:04:13.146906",
+      "created_at": "2026-02-28T17:04:13.146913",
+      "is_favorite": false,
+      "recipe": {
+        "title": "Cremiger Bananenmilch-Traum",
+        "description": "Ein samtig-süßes Getränk, das perfekt als leichter Snack oder Dessert dient. Schnell zubereitet und unwiderstehlich lecker, ideal, um reife Bananen und frische Milch zu verwerten.",
+        "ingredients": [
+          "2 reife Bananen",
+          "400 ml Milch",
+          "1 Esslöffel Honig oder Ahornsirup (*optional)",
+          "1/2 Teelöffel Zimt oder Vanille-Extrakt (*optional)"
+        ],
+        "steps": [
+          "Die Bananen schälen und in grobe Stücke brechen.",
+          "Die Bananenstücke zusammen mit der Milch (und den optionalen Zutaten Honig/Ahornsirup, Zimt/Vanille-Extrakt, falls verwendet) in einen Standmixer geben.",
+          "Alles cremig pürieren, bis keine Bananenstücke mehr sichtbar sind und eine homogene, leicht schaumige Konsistenz entsteht.",
+          "Bei Bedarf die Süße anpassen oder mit etwas mehr Milch verdünnen, wenn eine flüssigere Konsistenz gewünscht wird. Für eine kältere Variante können die Bananenstücke vor dem Mixen kurz eingefroren werden.",
+          "Sofort in Gläser füllen und genießen. Als kleine Empfehlung für Allergiker: Bei Laktoseintoleranz oder einer veganen Ernährung kann die Milch problemlos durch eine pflanzliche Alternative wie Mandelmilch, Hafermilch oder Sojamilch ersetzt werden."
+        ],
+        "time": "ca. 5 Minuten",
+        "servings": "2 Personen"
+      }
+    },
+    {
+      "id": "2026-02-28T17:03:50.059262",
+      "created_at": "2026-02-28T17:03:50.059270",
+      "is_favorite": false,
+      "recipe": {
+        "title": "⚠️ Fehler bei der Generierung",
+        "description": "Fehler: Gemini API Key fehlt",
+        "ingredients": [
+          "Banane",
+          "Milch"
+        ],
+        "steps": [
+          "Bitte versuche es erneut"
+        ],
+        "time": "N/A",
+        "servings": "N/A"
+      }
+    }
+  ]
+}

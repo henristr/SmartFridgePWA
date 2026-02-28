@@ -3,6 +3,7 @@ import requests
 import json
 import os
 import google.generativeai as genai
+import openai
 from config import GEMINI_API_KEY
 from datetime import datetime, timedelta
 
@@ -13,6 +14,7 @@ app.jinja_env.globals.update(enumerate=enumerate)
 DATEI = "produkte.json"
 USER_DATEI = "users.json"
 REZEPTE_DATEI = "rezepte.json"
+AI_CONFIG_DATEI = "ai_config.json"
 
 
 # ------------------ PRODUKTE LADEN ------------------
@@ -94,12 +96,31 @@ def bereinige_alte_rezepte(user_rezepte):
 rezepte = lade_rezepte()
 
 
-# ------------------ KI REZEPT GENERATOR MIT GEMINI AI ------------------
+# ------------------ AI CONFIG LADEN UND SPEICHERN ------------------
+def lade_ai_config():
+    if os.path.exists(AI_CONFIG_DATEI):
+        with open(AI_CONFIG_DATEI, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            if isinstance(data, dict):
+                return data
+    # Fallback auf Legacy Config
+    return {
+        "provider": "gemini",
+        "gemini_api_key": GEMINI_API_KEY if GEMINI_API_KEY and GEMINI_API_KEY != "HIER_DEINEN_API_KEY_EINTRAGEN" else "",
+        "gemini_model": "gemini-2.5-flash",
+        "openai_api_key": "",
+        "openai_model": "gpt-4o-mini",
+        "ollama_url": "http://localhost:11434/api/generate",
+        "ollama_model": "llama3.2"
+    }
 
-# Konfiguriere Gemini API (API Key aus config.py)
-if GEMINI_API_KEY and GEMINI_API_KEY != "HIER_DEINEN_API_KEY_EINTRAGEN":
-    genai.configure(api_key=GEMINI_API_KEY)
+def speichere_ai_config(config):
+    with open(AI_CONFIG_DATEI, "w", encoding="utf-8") as f:
+        json.dump(config, f, ensure_ascii=False, indent=2)
 
+ai_config = lade_ai_config()
+
+# ------------------ KI REZEPT GENERATOR ------------------
 
 def generiere_rezept(produkte_liste):
     """
@@ -113,22 +134,9 @@ def generiere_rezept(produkte_liste):
     produkt_namen = [p["name"] for p in produkte_liste]
     zutaten_text = ", ".join(produkt_namen)
 
-    # Prüfe ob API Key verfügbar ist
-    if not GEMINI_API_KEY or GEMINI_API_KEY == "HIER_DEINEN_API_KEY_EINTRAGEN":
-        return {
-            "title": "⚠️ API Key fehlt",
-            "description": "Um KI-generierte Rezepte zu erhalten, muss ein GEMINI_API_KEY in der config.py Datei eingetragen werden.",
-            "ingredients": produkt_namen,
-            "steps": [
-                "1. Öffne die Datei 'config.py' im Hauptverzeichnis",
-                "2. Besuche https://aistudio.google.com/app/apikey",
-                "3. Erstelle einen kostenlosen API Key",
-                "4. Trage den API Key in config.py ein (Zeile 15)",
-                "5. Starte die App neu",
-            ],
-            "time": "N/A",
-            "servings": "N/A",
-        }
+    # Lade aktuelle AI Config
+    global ai_config
+    provider = ai_config.get("provider", "gemini")
 
     # Ermittle Ernährungseinstellungen des Benutzers (falls verfügbar)
     user_diet = ""
@@ -139,7 +147,7 @@ def generiere_rezept(produkte_liste):
 
     diet_instruction = ""
     if user_diet:
-        diet_instruction = f"WICHTIG: Berücksichtige folgende Ernährungseinstellungen und Allergien des Benutzers: {user_diet}. Achte darauf, dass KEINE unverträglichen Zutaten im Rezept vorkommen!"
+        diet_instruction = f"WICHTIG: Berücksichtige folgende Ernährungseinstellungen und Allergien des Benutzers: {user_diet}. Achte darauf, dass KEINE unverträglichen Zutaten im Rezept vorkommen! und wenn der user eine bestimmte Portionenanzahl haben möchte, folge diesem Wunsch!"
 
     try:
         # Erstelle intelligenten Prompt für Gemini
@@ -171,12 +179,51 @@ Antworte im folgenden JSON-Format (ohne Markdown, nur pures JSON):
   "servings": "2 Personen"
 }}"""
 
-        # Generiere mit Gemini
-        model = genai.GenerativeModel("gemini-2.5-flash")
-        response = model.generate_content(prompt)
+        response_text = ""
 
-        # Parse JSON Response
-        response_text = response.text.strip()
+        if provider == "gemini":
+            api_key = ai_config.get("gemini_api_key")
+            if not api_key:
+                raise ValueError("Gemini API Key fehlt")
+            model_name = ai_config.get("gemini_model", "gemini-2.5-flash")
+            genai.configure(api_key=api_key)
+            model = genai.GenerativeModel(model_name)
+            response = model.generate_content(prompt)
+            response_text = response.text.strip()
+            
+        elif provider == "openai":
+            api_key = ai_config.get("openai_api_key")
+            if not api_key:
+                raise ValueError("OpenAI API Key fehlt")
+            model_name = ai_config.get("openai_model", "gpt-4o-mini")
+            
+            client = openai.OpenAI(api_key=api_key)
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": "Du antwortest immer ausschließlich im angeforderten JSON-Format."},
+                    {"role": "user", "content": prompt}
+                ]
+            )
+            response_text = response.choices[0].message.content.strip()
+
+        elif provider == "ollama":
+            url = ai_config.get("ollama_url", "http://localhost:11434/api/generate")
+            model_name = ai_config.get("ollama_model", "llama3.2")
+            
+            payload = {
+                "model": model_name,
+                "prompt": prompt,
+                "stream": False,
+                "format": "json"
+            }
+            response = requests.post(url, json=payload, timeout=60)
+            if response.status_code == 200:
+                response_text = response.json().get("response", "").strip()
+            else:
+                raise ValueError(f"Ollama Error HTTP {response.status_code}: {response.text}")
+        else:
+            raise ValueError(f"Unbekannter Provider: {provider}")
 
         # Entferne Markdown Code-Blöcke falls vorhanden
         if response_text.startswith("```"):
@@ -399,6 +446,53 @@ def save_diet():
     speichere_users(users)
     return jsonify({"success": True, "message": "Ernährungseinstellungen erfolgreich gespeichert"})
 
+
+@app.route("/api/ai-config", methods=["GET", "POST"])
+def api_ai_config():
+    """API Endpunkt für die KI Konfiguration (Nur Admin)"""
+    if "user" not in session or session["user"] != "admin":
+        return jsonify({"success": False, "message": "Unautorisiert"}), 403
+
+    global ai_config
+
+    if request.method == "GET":
+        # Verstecke API Keys teilweise für Sicherheit beim Senden
+        safe_config = ai_config.copy()
+        for key in ["gemini_api_key", "openai_api_key"]:
+            if safe_config.get(key):
+                val = safe_config[key]
+                if len(val) > 8:
+                    safe_config[key] = f"{val[:4]}...{val[-4:]}"
+                else:
+                    safe_config[key] = "***"
+        return jsonify({"success": True, "config": safe_config})
+
+    if request.method == "POST":
+        data = request.get_json()
+        
+        # Aktualisiere Config, behalte alte API Keys falls Platzhalter (***) gesendet werden
+        updated = False
+        
+        if "provider" in data:
+            ai_config["provider"] = data["provider"]
+            updated = True
+            
+        # Update Felder, ignoriere Dummy/Platzhalter
+        for key in ["gemini_model", "openai_model", "ollama_url", "ollama_model"]:
+            if key in data:
+                ai_config[key] = data[key]
+                updated = True
+                
+        for key in ["gemini_api_key", "openai_api_key"]:
+            if key in data and data[key] and not data[key].endswith("..."):
+                if data[key] != "***" and "..." not in data[key]:
+                    ai_config[key] = data[key]
+                    updated = True
+
+        if updated:
+            speichere_ai_config(ai_config)
+            
+        return jsonify({"success": True, "message": "Konfiguration gespeichert"})
 
 @app.route("/api/generate-recipe")
 def api_generate_recipe():

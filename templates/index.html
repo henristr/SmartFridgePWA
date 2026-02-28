@@ -654,6 +654,59 @@
         Developer Fenster – Benutzerverwaltung
       </h2>
 
+      <!-- AI Provider Einstellungen -->
+      <div
+        style="background: #f0f8ff; padding: 16px; border-radius: 14px; margin-bottom: 20px; border: 1px solid #cce5ff;">
+        <h3 style="margin-top: 0; color: #004085; font-size: 1.1rem; margin-bottom: 12px;">🤖 KI-Anbieter konfigurieren
+        </h3>
+
+        <form id="aiConfigForm" style="display: flex; flex-direction: column; gap: 10px;">
+          <label style="font-weight: 500; font-size: 0.9rem; color: #333;">Provider:</label>
+          <select id="aiProvider" name="provider" style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+            <option value="gemini">Google Gemini AI</option>
+            <option value="openai">OpenAI (ChatGPT)</option>
+            <option value="ollama">Ollama (Lokal)</option>
+          </select>
+
+          <!-- Gemini Settings -->
+          <div id="aiGeminiSettings" style="display: flex; flex-direction: column; gap: 10px;">
+            <input type="password" id="geminiApiKey" name="gemini_api_key" placeholder="Gemini API Key"
+              style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box;" />
+            <input type="text" id="geminiModel" name="gemini_model" placeholder="Model (z.B. gemini-2.5-flash)"
+              value="gemini-2.5-flash"
+              style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box;" />
+          </div>
+
+          <!-- OpenAI Settings -->
+          <div id="aiOpenAISettings" style="display: none; flex-direction: column; gap: 10px;">
+            <input type="password" id="openaiApiKey" name="openai_api_key" placeholder="OpenAI API Key"
+              style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box;" />
+            <input type="text" id="openaiModel" name="openai_model" placeholder="Model (z.B. gpt-4o-mini)"
+              value="gpt-4o-mini"
+              style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box;" />
+          </div>
+
+          <!-- Ollama Settings -->
+          <div id="aiOllamaSettings" style="display: none; flex-direction: column; gap: 10px;">
+            <input type="text" id="ollamaUrl" name="ollama_url"
+              placeholder="API URL (z.B. http://localhost:11434/api/generate)"
+              value="http://localhost:11434/api/generate"
+              style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box;" />
+            <input type="text" id="ollamaModel" name="ollama_model" placeholder="Model (z.B. llama3.2)" value="llama3.2"
+              style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box;" />
+          </div>
+
+          <button type="button" id="aiConfigSaveBtn"
+            style="padding: 10px; border-radius: 8px; background: #28a745; color: white; border: none; font-weight: 600; cursor: pointer; margin-top: 5px;">
+            💾 KI Speichern
+          </button>
+          <div id="aiConfigMsg" style="font-size: 0.85rem; text-align: center; margin-top: 5px;"></div>
+        </form>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+      <h3 style="text-align: center; margin-bottom: 16px; color: #333; font-size: 1.1rem;">Benutzerverwaltung</h3>
+
       <!-- Benutzer hinzufügen -->
       <form method="POST" style="
             display: flex;
@@ -751,6 +804,76 @@
       }
 
       if (closeBtn) closeBtn.addEventListener("click", closeOverlay);
+
+      // AI Config Logic
+      const aiProvider = document.getElementById("aiProvider");
+      const aiGeminiSettings = document.getElementById("aiGeminiSettings");
+      const aiOpenAISettings = document.getElementById("aiOpenAISettings");
+      const aiOllamaSettings = document.getElementById("aiOllamaSettings");
+      const aiConfigSaveBtn = document.getElementById("aiConfigSaveBtn");
+      const aiConfigMsg = document.getElementById("aiConfigMsg");
+
+      if (aiProvider) {
+        aiProvider.addEventListener("change", function () {
+          aiGeminiSettings.style.display = this.value === "gemini" ? "flex" : "none";
+          aiOpenAISettings.style.display = this.value === "openai" ? "flex" : "none";
+          aiOllamaSettings.style.display = this.value === "ollama" ? "flex" : "none";
+        });
+
+        // Load Config on Open
+        fetch("/api/ai-config")
+          .then(res => res.json())
+          .then(data => {
+            if (data.success && data.config) {
+              const c = data.config;
+              aiProvider.value = c.provider || "gemini";
+              document.getElementById("geminiApiKey").value = c.gemini_api_key || "";
+              document.getElementById("geminiModel").value = c.gemini_model || "gemini-2.5-flash";
+              document.getElementById("openaiApiKey").value = c.openai_api_key || "";
+              document.getElementById("openaiModel").value = c.openai_model || "gpt-4o-mini";
+              document.getElementById("ollamaUrl").value = c.ollama_url || "http://localhost:11434/api/generate";
+              document.getElementById("ollamaModel").value = c.ollama_model || "llama3.2";
+              aiProvider.dispatchEvent(new Event("change"));
+            }
+          })
+          .catch(e => console.error("Could not load AI Config", e));
+
+        aiConfigSaveBtn.addEventListener("click", function () {
+          const payload = {
+            provider: aiProvider.value,
+            gemini_api_key: document.getElementById("geminiApiKey").value,
+            gemini_model: document.getElementById("geminiModel").value,
+            openai_api_key: document.getElementById("openaiApiKey").value,
+            openai_model: document.getElementById("openaiModel").value,
+            ollama_url: document.getElementById("ollamaUrl").value,
+            ollama_model: document.getElementById("ollamaModel").value,
+          };
+
+          aiConfigMsg.textContent = "Speichere...";
+          aiConfigMsg.style.color = "#666";
+
+          fetch("/api/ai-config", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                aiConfigMsg.textContent = "✅ Konfiguration gespeichert!";
+                aiConfigMsg.style.color = "green";
+                setTimeout(() => aiConfigMsg.textContent = "", 3000);
+              } else {
+                aiConfigMsg.textContent = "❌ Fehler: " + data.message;
+                aiConfigMsg.style.color = "red";
+              }
+            })
+            .catch(e => {
+              aiConfigMsg.textContent = "❌ Netzwerkfehler.";
+              aiConfigMsg.style.color = "red";
+            });
+        });
+      }
 
       // Klick auf den abgedunkelten Hintergrund schließt
       if (overlay)
