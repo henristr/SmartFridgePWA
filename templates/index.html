@@ -1,541 +1,556 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SmartFridge</title>
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}" />
-    <link rel="apple-touch-icon" sizes="57x57" href="{{ url_for('static', filename='icons/apple-icon-57x57.png') }}">
-    <link rel="apple-touch-icon" sizes="60x60" href="{{ url_for('static', filename='icons/apple-icon-60x60.png') }}">
-    <link rel="apple-touch-icon" sizes="72x72" href="{{ url_for('static', filename='icons/apple-icon-72x72.png') }}">
-    <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='icons/apple-icon-76x76.png') }}">
-    <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename='icons/apple-icon-114x114.png') }}">
-    <link rel="apple-touch-icon" sizes="120x120" href="{{ url_for('static', filename='icons/apple-icon-120x120.png') }}">
-    <link rel="apple-touch-icon" sizes="144x144" href="{{ url_for('static', filename='icons/apple-icon-144x144.png') }}">
-    <link rel="apple-touch-icon" sizes="152x152" href="{{ url_for('static', filename='icons/apple-icon-152x152.png') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-icon-180x180.png') }}">
-    <link rel="icon" type="image/png" sizes="192x192"  href="{{ url_for('static', filename='icons/android-icon-192x192.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static', filename='icons/favicon-96x96.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icons/favicon-16x16.png') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" type="image/x-icon">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="{{ url_for('static', filename='icons/ms-icon-144x144.png') }}">
-    <meta name="theme-color" content="#ffffff">
-    <style>
-      :root {
-        --bg-gradient-start: #f2f4f8;
-        --bg-gradient-end: #e8ecf3;
-        --container-bg: rgba(255, 255, 255, 0.6);
-        --text-primary: #333;
-        --text-secondary: #666;
-        --text-muted: #999;
-        --input-bg: rgba(255, 255, 255, 0.8);
-        --input-border: #ccc;
-        --card-bg: white;
-        --card-hover: #eef;
-        --shadow-light: rgba(0, 0, 0, 0.06);
-        --shadow-medium: rgba(0, 0, 0, 0.1);
-        --shadow-dark: rgba(0, 0, 0, 0.3);
-        --modal-bg: white;
-        --modal-overlay: rgba(0, 0, 0, 0.5);
-        --accent-blue: #4facfe;
-        --accent-cyan: #00f2fe;
-        --accent-red: #ff6b6b;
-        --accent-orange: #ff8e53;
-        --dev-list-bg: #f9f9f9;
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SmartFridge</title>
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}" />
+  <link rel="apple-touch-icon" sizes="57x57" href="{{ url_for('static', filename='icons/apple-icon-57x57.png') }}">
+  <link rel="apple-touch-icon" sizes="60x60" href="{{ url_for('static', filename='icons/apple-icon-60x60.png') }}">
+  <link rel="apple-touch-icon" sizes="72x72" href="{{ url_for('static', filename='icons/apple-icon-72x72.png') }}">
+  <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='icons/apple-icon-76x76.png') }}">
+  <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename='icons/apple-icon-114x114.png') }}">
+  <link rel="apple-touch-icon" sizes="120x120" href="{{ url_for('static', filename='icons/apple-icon-120x120.png') }}">
+  <link rel="apple-touch-icon" sizes="144x144" href="{{ url_for('static', filename='icons/apple-icon-144x144.png') }}">
+  <link rel="apple-touch-icon" sizes="152x152" href="{{ url_for('static', filename='icons/apple-icon-152x152.png') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-icon-180x180.png') }}">
+  <link rel="icon" type="image/png" sizes="192x192"
+    href="{{ url_for('static', filename='icons/android-icon-192x192.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static', filename='icons/favicon-96x96.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icons/favicon-16x16.png') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" type="image/x-icon">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="{{ url_for('static', filename='icons/ms-icon-144x144.png') }}">
+  <meta name="theme-color" content="#ffffff">
+  <style>
+    :root {
+      --bg-gradient-start: #f2f4f8;
+      --bg-gradient-end: #e8ecf3;
+      --container-bg: rgba(255, 255, 255, 0.6);
+      --text-primary: #333;
+      --text-secondary: #666;
+      --text-muted: #999;
+      --input-bg: rgba(255, 255, 255, 0.8);
+      --input-border: #ccc;
+      --card-bg: white;
+      --card-hover: #eef;
+      --shadow-light: rgba(0, 0, 0, 0.06);
+      --shadow-medium: rgba(0, 0, 0, 0.1);
+      --shadow-dark: rgba(0, 0, 0, 0.3);
+      --modal-bg: white;
+      --modal-overlay: rgba(0, 0, 0, 0.5);
+      --accent-blue: #4facfe;
+      --accent-cyan: #00f2fe;
+      --accent-red: #ff6b6b;
+      --accent-orange: #ff8e53;
+      --dev-list-bg: #f9f9f9;
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient-start: #1a1a2e;
+      --bg-gradient-end: #16213e;
+      --container-bg: rgba(30, 30, 46, 0.8);
+      --text-primary: #e4e4e7;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --input-bg: rgba(39, 39, 52, 0.9);
+      --input-border: #3f3f46;
+      --card-bg: #27293d;
+      --card-hover: #2d2f42;
+      --shadow-light: rgba(0, 0, 0, 0.3);
+      --shadow-medium: rgba(0, 0, 0, 0.4);
+      --shadow-dark: rgba(0, 0, 0, 0.6);
+      --modal-bg: #27293d;
+      --modal-overlay: rgba(0, 0, 0, 0.7);
+      --dev-list-bg: #1e1e2e;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      transition: background 0.3s ease;
+    }
+
+    .container {
+      max-width: 480px;
+      width: 100%;
+      padding: 24px;
+      margin: auto;
+      backdrop-filter: blur(20px);
+      background: var(--container-bg);
+      border-radius: 24px;
+      box-shadow: 0 8px 20px var(--shadow-medium);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+      transition: color 0.3s ease;
+    }
+
+    input,
+    button {
+      font-size: 1rem;
+      margin: 10px 0;
+      border-radius: 14px;
+      border: none;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      box-sizing: border-box;
+    }
+
+    input {
+      background-color: var(--input-bg);
+      border: 1px solid var(--input-border);
+      padding: 14px 16px;
+      width: 100%;
+      color: var(--text-primary);
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 6px #4facfe88;
+    }
+
+    button {
+      background: linear-gradient(to right, var(--accent-blue), var(--accent-cyan));
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 14px 16px;
+      width: 100%;
+    }
+
+    button:hover {
+      opacity: 0.95;
+    }
+
+    .produkt-liste {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .produkt {
+      background: var(--card-bg);
+      padding: 14px 18px;
+      border-radius: 16px;
+      box-shadow: 0 2px 6px var(--shadow-light);
+      font-size: 1rem;
+      color: var(--text-primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.2s ease, box-shadow 0.2s ease, color 0.3s ease;
+    }
+
+    .produkt:hover {
+      background: var(--card-hover);
+    }
+
+    .produkt.expiring-soon {
+      background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+      border-left: 4px solid #ff8800;
+    }
+
+    [data-theme="dark"] .produkt.expiring-soon {
+      background: linear-gradient(135deg, #4a3f00 0%, #5a4a00 100%);
+      border-left: 4px solid #ffaa00;
+    }
+
+    .produkt.expired-soon {
+      background: linear-gradient(135deg, #f8d7da 0%, #ffb3b3 100%);
+      border-left: 4px solid #cc0000;
+    }
+
+    [data-theme="dark"] .produkt.expired-soon {
+      background: linear-gradient(135deg, #4a1a1a 0%, #5a2020 100%);
+      border-left: 4px solid #ff3333;
+    }
+
+    .leer {
+      text-align: center;
+      color: var(--text-muted);
+      margin-top: 20px;
+      transition: color 0.3s ease;
+    }
+
+    #reader {
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button.delete-btn {
+      border: 2px solid red;
+      background: white;
+      color: red;
+      border-radius: 14px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    button.delete-btn:hover {
+      background: red;
+      color: white;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--modal-overlay);
+      justify-content: center;
+      align-items: center;
+      transition: background 0.3s ease;
+    }
+
+    .modal-content {
+      background: var(--modal-bg);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 6px 16px var(--shadow-dark);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      animation: zoomIn 0.3s;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .modal-content h2,
+    .modal-content h3,
+    .modal-content h4 {
+      color: var(--text-primary);
+      transition: color 0.3s ease;
+    }
+
+    .modal-content p {
+      color: var(--text-secondary);
+      transition: color 0.3s ease;
+    }
+
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.8);
       }
 
-      [data-theme="dark"] {
-        --bg-gradient-start: #1a1a2e;
-        --bg-gradient-end: #16213e;
-        --container-bg: rgba(30, 30, 46, 0.8);
-        --text-primary: #e4e4e7;
-        --text-secondary: #a1a1aa;
-        --text-muted: #71717a;
-        --input-bg: rgba(39, 39, 52, 0.9);
-        --input-border: #3f3f46;
-        --card-bg: #27293d;
-        --card-hover: #2d2f42;
-        --shadow-light: rgba(0, 0, 0, 0.3);
-        --shadow-medium: rgba(0, 0, 0, 0.4);
-        --shadow-dark: rgba(0, 0, 0, 0.6);
-        --modal-bg: #27293d;
-        --modal-overlay: rgba(0, 0, 0, 0.7);
-        --dev-list-bg: #1e1e2e;
+      to {
+        transform: scale(1);
+      }
+    }
+
+    .close-btn {
+      background: red;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    /* Plus-Button */
+    #form {
+      position: relative;
+    }
+
+    #barcode {
+      padding-right: 40px;
+    }
+
+    #manualBtn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: #4facfe;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      line-height: 28px;
+    }
+
+    #manualName {
+      display: none;
+      margin-top: 10px;
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid #ccc;
+    }
+
+    .kitchenai-icon {
+      height: 24px;
+      width: 24px;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      background: var(--card-bg);
+      border: 2px solid var(--input-border);
+      color: var(--text-primary);
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .theme-toggle:hover {
+      background: var(--card-hover);
+      transform: scale(1.05);
+    }
+
+    .user-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .user-header p {
+      margin: 0;
+      color: var(--text-primary);
+      transition: color 0.3s ease;
+    }
+
+    .user-header a {
+      color: var(--accent-blue);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .user-header a:hover {
+      text-decoration: underline;
+    }
+
+    /* Recipe Book Modal */
+    .recipe-book-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--modal-overlay);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .recipe-book {
+      background: var(--modal-bg);
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px var(--shadow-dark);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      padding: 25px;
+    }
+
+    .recipe-book-header {
+      background: linear-gradient(to right, #8e44ad, #c39bd3);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .recipe-book-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 30px;
+      position: relative;
+    }
+
+    .recipe-page {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .recipe-page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
       }
 
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          sans-serif;
-        background: linear-gradient(180deg, var(--bg-gradient-start), var(--bg-gradient-end));
-        display: flex;
-        justify-content: center;
-        min-height: 100vh;
-        transition: background 0.3s ease;
+      to {
+        opacity: 1;
+        transform: translateX(0);
       }
-      .container {
-        max-width: 480px;
-        width: 100%;
-        padding: 24px;
-        margin: auto;
-        backdrop-filter: blur(20px);
-        background: var(--container-bg);
-        border-radius: 24px;
-        box-shadow: 0 8px 20px var(--shadow-medium);
-        transition: background 0.3s ease, box-shadow 0.3s ease;
-      }
-      h1 {
-        text-align: center;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 24px;
-        transition: color 0.3s ease;
-      }
-      input,
-      button {
-        font-size: 1rem;
-        margin: 10px 0;
-        border-radius: 14px;
-        border: none;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        box-sizing: border-box;
-      }
-      input {
-        background-color: var(--input-bg);
-        border: 1px solid var(--input-border);
-        padding: 14px 16px;
-        width: 100%;
-        color: var(--text-primary);
-        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-      }
-      input:focus {
-        outline: none;
-        border-color: var(--accent-blue);
-        box-shadow: 0 0 6px #4facfe88;
-      }
-      button {
-        background: linear-gradient(to right, var(--accent-blue), var(--accent-cyan));
-        color: white;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-        padding: 14px 16px;
-        width: 100%;
-      }
-      button:hover {
-        opacity: 0.95;
-      }
-      .produkt-liste {
-        margin-top: 24px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      .produkt {
-        background: var(--card-bg);
-        padding: 14px 18px;
-        border-radius: 16px;
-        box-shadow: 0 2px 6px var(--shadow-light);
-        font-size: 1rem;
-        color: var(--text-primary);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-        transition: background 0.2s ease, box-shadow 0.2s ease, color 0.3s ease;
-      }
-      .produkt:hover {
-        background: var(--card-hover);
-      }
-      .produkt.expiring-soon {
-        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-        border-left: 4px solid #ff8800;
-      }
-      [data-theme="dark"] .produkt.expiring-soon {
-        background: linear-gradient(135deg, #4a3f00 0%, #5a4a00 100%);
-        border-left: 4px solid #ffaa00;
-      }
-      .produkt.expired-soon {
-        background: linear-gradient(135deg, #f8d7da 0%, #ffb3b3 100%);
-        border-left: 4px solid #cc0000;
-      }
-      [data-theme="dark"] .produkt.expired-soon {
-        background: linear-gradient(135deg, #4a1a1a 0%, #5a2020 100%);
-        border-left: 4px solid #ff3333;
-      }
-      .leer {
-        text-align: center;
-        color: var(--text-muted);
-        margin-top: 20px;
-        transition: color 0.3s ease;
-      }
-      #reader {
-        width: 100%;
-        margin-top: 20px;
-        border-radius: 14px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      }
-      button.delete-btn {
-        border: 2px solid red;
-        background: white;
-        color: red;
-        border-radius: 14px;
-        padding: 6px 12px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.2s;
-      }
-      button.delete-btn:hover {
-        background: red;
-        color: white;
-      }
-      /* Modal */
-      .modal {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: var(--modal-overlay);
-        justify-content: center;
-        align-items: center;
-        transition: background 0.3s ease;
-      }
-      .modal-content {
-        background: var(--modal-bg);
-        padding: 20px;
-        border-radius: 20px;
-        box-shadow: 0 6px 16px var(--shadow-dark);
-        width: 90%;
-        max-width: 400px;
-        text-align: center;
-        animation: zoomIn 0.3s;
-        transition: background 0.3s ease, box-shadow 0.3s ease;
-      }
-      .modal-content h2,
-      .modal-content h3,
-      .modal-content h4 {
-        color: var(--text-primary);
-        transition: color 0.3s ease;
-      }
-      .modal-content p {
-        color: var(--text-secondary);
-        transition: color 0.3s ease;
-      }
-      @keyframes zoomIn {
-        from {
-          transform: scale(0.8);
-        }
-        to {
-          transform: scale(1);
-        }
-      }
-      .close-btn {
-        background: red;
-        color: white;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 10px;
-        cursor: pointer;
-        font-weight: 600;
-        margin-top: 10px;
-      }
-      /* Plus-Button */
-      #form {
-        position: relative;
-      }
-      #barcode {
-        padding-right: 40px;
-      }
-      #manualBtn {
-        position: absolute;
-        right: 8px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        border: none;
-        background: #4facfe;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-        line-height: 28px;
-      }
-      #manualName {
-        display: none;
-        margin-top: 10px;
-        width: 100%;
-        padding: 14px 16px;
-        border-radius: 14px;
-        border: 1px solid #ccc;
-      }
+    }
 
-      .kitchenai-icon {
-        height: 24px;
-        width: 24px;
-      }
+    .recipe-card {
+      background: var(--card-bg);
+      border: 2px solid var(--input-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      position: relative;
+      box-shadow: 0 4px 12px var(--shadow-light);
+      transition: all 0.3s ease;
+    }
 
-      /* Theme Toggle */
-      .theme-toggle {
-        background: var(--card-bg);
-        border: 2px solid var(--input-border);
-        color: var(--text-primary);
-        cursor: pointer;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .theme-toggle:hover {
-        background: var(--card-hover);
-        transform: scale(1.05);
-      }
+    .recipe-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px var(--shadow-medium);
+    }
 
-      .user-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 16px;
-      }
-      .user-header p {
-        margin: 0;
-        color: var(--text-primary);
-        transition: color 0.3s ease;
-      }
-      .user-header a {
-        color: var(--accent-blue);
-        text-decoration: none;
-        transition: color 0.3s ease;
-      }
-      .user-header a:hover {
-        text-decoration: underline;
-      }
+    .recipe-favorite {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 28px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
 
-      /* Recipe Book Modal */
-      .recipe-book-modal {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: var(--modal-overlay);
-        justify-content: center;
-        align-items: center;
-        z-index: 2000;
-        padding: 20px;
-      }
+    .recipe-favorite:hover {
+      transform: scale(1.2);
+    }
 
+    .recipe-favorite.favorited {
+      filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.8));
+    }
+
+    .recipe-navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--input-border);
+    }
+
+    .recipe-nav-btn {
+      background: linear-gradient(to right, #8e44ad, #c39bd3);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .recipe-nav-btn:hover:not(:disabled) {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
+
+    .recipe-nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .recipe-page-info {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .recipe-empty {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 60px 20px;
+      font-size: 1.1rem;
+    }
+
+    .recipe-date {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 600px) {
       .recipe-book {
-        background: var(--modal-bg);
-        width: 100%;
-        max-width: 900px;
-        max-height: 90vh;
-        border-radius: 20px;
-        box-shadow: 0 10px 40px var(--shadow-dark);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        transition: all 0.3s ease;
-        padding: 25px;
-      }
-
-      .recipe-book-header {
-        background: linear-gradient(to right, #8e44ad, #c39bd3);
-        color: white;
-        padding: 20px;
-        text-align: center;
-        font-size: 1.5rem;
-        font-weight: 600;
+        max-width: 100%;
+        border-radius: 0;
+        max-height: 100vh;
       }
 
       .recipe-book-content {
-        flex: 1;
-        overflow-y: auto;
-        padding: 30px;
-        position: relative;
-      }
-
-      .recipe-page {
-        display: none;
-        animation: fadeIn 0.3s ease;
-      }
-
-      .recipe-page.active {
-        display: block;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateX(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
+        padding: 20px;
       }
 
       .recipe-card {
-        background: var(--card-bg);
-        border: 2px solid var(--input-border);
-        border-radius: 16px;
-        padding: 24px;
-        margin-bottom: 20px;
-        position: relative;
-        box-shadow: 0 4px 12px var(--shadow-light);
-        transition: all 0.3s ease;
-      }
-
-      .recipe-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px var(--shadow-medium);
+        padding: 16px;
       }
 
       .recipe-favorite {
-        position: absolute;
-        top: 16px;
-        right: 16px;
-        font-size: 28px;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        font-size: 24px;
+        top: 12px;
+        right: 12px;
       }
+    }
+  </style>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+</head>
 
-      .recipe-favorite:hover {
-        transform: scale(1.2);
-      }
+<body>
+  <div class="container">
+    {% if login %}
+    <h1>Login</h1>
+    {% if error %}
+    <p style="color: red">{{ error }}</p>
+    {% endif %}
+    <form method="POST">
+      <input type="text" name="username" placeholder="Benutzername" required />
+      <input type="password" name="password" placeholder="Passwort" required />
+      <button type="submit">Login</button>
+    </form>
+    {% else %}
+    <h1>🧊 Mein Kühlschrank</h1>
+    <div class="user-header">
+      <p>Willkommen {{ user }}! | <a href="#" id="settingsLink">⚙️ Einstellungen</a> | <a
+          href="{{ url_for('logout') }}">Logout</a></p>
+      <button class="theme-toggle" id="themeToggle">
+        <span id="themeIcon">🌙</span>
+        <span id="themeText">Dark</span>
+      </button>
+    </div>
 
-      .recipe-favorite.favorited {
-        filter: drop-shadow(0 2px 8px rgba(255,215,0,0.8));
-      }
-
-      .recipe-navigation {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px;
-        background: var(--card-bg);
-        border-top: 1px solid var(--input-border);
-      }
-
-      .recipe-nav-btn {
-        background: linear-gradient(to right, #8e44ad, #c39bd3);
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 12px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.2s ease;
-      }
-
-      .recipe-nav-btn:hover:not(:disabled) {
-        opacity: 0.9;
-        transform: scale(1.05);
-      }
-
-      .recipe-nav-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-
-      .recipe-page-info {
-        color: var(--text-primary);
-        font-weight: 600;
-      }
-
-      .recipe-empty {
-        text-align: center;
-        color: var(--text-muted);
-        padding: 60px 20px;
-        font-size: 1.1rem;
-      }
-
-      .recipe-date {
-        color: var(--text-secondary);
-        font-size: 0.85rem;
-        margin-top: 8px;
-      }
-
-      @media (max-width: 600px) {
-        .recipe-book {
-          max-width: 100%;
-          border-radius: 0;
-          max-height: 100vh;
-        }
-
-        .recipe-book-content {
-          padding: 20px;
-        }
-
-        .recipe-card {
-          padding: 16px;
-        }
-
-        .recipe-favorite {
-          font-size: 24px;
-          top: 12px;
-          right: 12px;
-        }
-      }
-    </style>
-    <script
-      src="https://unpkg.com/html5-qrcode"
-      type="text/javascript"
-    ></script>
-  </head>
-  <body>
-    <div class="container">
-      {% if login %}
-      <h1>Login</h1>
-      {% if error %}
-      <p style="color: red">{{ error }}</p>
-      {% endif %}
-      <form method="POST">
-        <input
-          type="text"
-          name="username"
-          placeholder="Benutzername"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Passwort"
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
-      {% else %}
-      <h1>🧊 Mein Kühlschrank</h1>
-      <div class="user-header">
-        <p>Willkommen {{ user }}! | <a href="#" id="settingsLink">⚙️ Einstellungen</a> | <a href="{{ url_for('logout') }}">Logout</a></p>
-        <button class="theme-toggle" id="themeToggle">
-          <span id="themeIcon">🌙</span>
-          <span id="themeText">Dark</span>
-        </button>
-      </div>
-
-      <form
-        method="POST"
-        id="form"
-        style="margin-bottom: 10px; position: relative"
-      >
-        <div style="position: relative; width: 100%; height: 48px">
-          <input
-            type="text"
-            id="barcode"
-            name="barcode"
-            placeholder="Barcode eingeben"
-            autocomplete="off"
-            style="
+    <form method="POST" id="form" style="margin-bottom: 10px; position: relative">
+      <div style="position: relative; width: 100%; height: 48px">
+        <input type="text" id="barcode" name="barcode" placeholder="Barcode eingeben" autocomplete="off" style="
               width: 100%;
               height: 100%;
               padding: 0 44px 0 16px;
@@ -544,12 +559,8 @@
               box-sizing: border-box;
               font-size: 16px;
               line-height: 48px;
-            "
-          />
-          <button
-            type="button"
-            id="manualBtn"
-            style="
+            " />
+        <button type="button" id="manualBtn" style="
               position: absolute;
               right: 8px;
               top: 50%;
@@ -566,89 +577,61 @@
               display: flex;
               justify-content: center;
               align-items: center;
-            "
-          >
-            +
-          </button>
-        </div>
-        <input
-          type="text"
-          id="manualName"
-          name="manual_name"
-          placeholder="Produktname eingeben"
-        />
-        <input type="date" name="ablauf" placeholder="Ablaufdatum" />
-        <button type="submit" name="add">➕ Produkt hinzufügen</button>
-      </form>
+            ">
+          +
+        </button>
+      </div>
+      <input type="text" id="manualName" name="manual_name" placeholder="Produktname eingeben" />
+      <input type="date" name="ablauf" placeholder="Ablaufdatum" />
+      <button type="submit" name="add">➕ Produkt hinzufügen</button>
+    </form>
 
-      <div id="reader"></div>
+    <div id="reader"></div>
 
-      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-        <input
-          type="text"
-          id="suche"
-          placeholder="Produkt suchen..."
-          style="flex: 1; min-width: 150px;"
-        />
-        <button
-          type="button"
-          id="aiRecipeBtn"
-          style="
+    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+      <input type="text" id="suche" placeholder="Produkt suchen..." style="flex: 1; min-width: 150px;" />
+      <button type="button" id="aiRecipeBtn" style="
             width: auto;
             padding: 14px 20px;
             white-space: nowrap;
             background: linear-gradient(to right, #ff6b6b, #ff8e53);
-          "
-        >
-          <img class="kitchenai-icon" src="/static/icons/kitchai.png" alt="" />
-          KitchenAI
-        </button>
-        <button
-          type="button"
-          id="recipeHistoryBtn"
-          style="
+          ">
+        <img class="kitchenai-icon" src="/static/icons/kitchai.png" alt="" />
+        KitchenAI
+      </button>
+      <button type="button" id="recipeHistoryBtn" style="
             width: auto;
             padding: 14px 20px;
             white-space: nowrap;
             background: linear-gradient(to right, #8e44ad, #c39bd3);
-          "
-        >
-          📖 Rezeptbuch
-        </button>
-      </div>
-
-      <div class="produkt-liste" id="produktListe">
-        {% if produkte %} {% for produkt in produkte %}
-        <div
-          class="produkt"
-          data-index="{{ loop.index0 }}"
-          data-name="{{ produkt.name }}"
-          data-ablauf="{{ produkt.ablauf }}"
-        >
-          <div class="produkt-name">
-            {{ produkt.name }}{% if produkt.ablauf %} – läuft ab am {{
-            produkt.ablauf }}{% endif %}
-          </div>
-          <form
-            method="POST"
-            onsubmit="return confirm('Willst du das Produkt wirklich löschen?');"
-          >
-            <input type="hidden" name="delete" value="{{ loop.index0 }}" />
-            <button type="submit" class="delete-btn">🗑️</button>
-          </form>
-        </div>
-        {% endfor %} {% else %}
-        <p class="leer">Noch keine Produkte eingetragen</p>
-        {% endif %}
-      </div>
-      {% endif %}
+          ">
+        📖 Rezeptbuch
+      </button>
     </div>
 
-    {% if dev_mode %}
-    <!-- DEV OVERLAY -->
-    <div
-      id="devOverlay"
-      style="
+    <div class="produkt-liste" id="produktListe">
+      {% if produkte %} {% for produkt in produkte %}
+      <div class="produkt" data-index="{{ loop.index0 }}" data-name="{{ produkt.name }}"
+        data-ablauf="{{ produkt.ablauf }}">
+        <div class="produkt-name">
+          {{ produkt.name }}{% if produkt.ablauf %} – läuft ab am {{
+          produkt.ablauf }}{% endif %}
+        </div>
+        <form method="POST" onsubmit="return confirm('Willst du das Produkt wirklich löschen?');">
+          <input type="hidden" name="delete" value="{{ loop.index0 }}" />
+          <button type="submit" class="delete-btn">🗑️</button>
+        </form>
+      </div>
+      {% endfor %} {% else %}
+      <p class="leer">Noch keine Produkte eingetragen</p>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  {% if dev_mode %}
+  <!-- DEV OVERLAY -->
+  <div id="devOverlay" style="
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.6);
@@ -656,10 +639,8 @@
         justify-content: center;
         align-items: center;
         z-index: 1000;
-      "
-    >
-      <div
-        style="
+      ">
+    <div style="
           background: white;
           width: 90%;
           max-width: 500px;
@@ -668,56 +649,31 @@
           box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
           overflow-y: auto;
           max-height: 90%;
-        "
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="devTitle"
-      >
-        <h2
-          id="devTitle"
-          style="text-align: center; margin-bottom: 16px; color: #333"
-        >
-          Developer Fenster – Benutzerverwaltung
-        </h2>
+        " role="dialog" aria-modal="true" aria-labelledby="devTitle">
+      <h2 id="devTitle" style="text-align: center; margin-bottom: 16px; color: #333">
+        Developer Fenster – Benutzerverwaltung
+      </h2>
 
-        <!-- Benutzer hinzufügen -->
-        <form
-          method="POST"
-          style="
+      <!-- Benutzer hinzufügen -->
+      <form method="POST" style="
             display: flex;
             flex-direction: column;
             gap: 12px;
             margin-bottom: 16px;
-          "
-        >
-          <input
-            type="text"
-            name="new_user"
-            placeholder="Neuer Benutzer"
-            required
-            style="
+          ">
+        <input type="text" name="new_user" placeholder="Neuer Benutzer" required style="
               padding: 12px;
               border-radius: 14px;
               border: 1px solid #ccc;
               font-size: 1rem;
-            "
-          />
-          <input
-            type="password"
-            name="new_pass"
-            placeholder="Passwort"
-            required
-            style="
+            " />
+        <input type="password" name="new_pass" placeholder="Passwort" required style="
               padding: 12px;
               border-radius: 14px;
               border: 1px solid #ccc;
               font-size: 1rem;
-            "
-          />
-          <button
-            type="submit"
-            name="add_user"
-            style="
+            " />
+        <button type="submit" name="add_user" style="
               padding: 12px;
               border-radius: 14px;
               background: linear-gradient(to right, #4facfe, #00f2fe);
@@ -725,26 +681,22 @@
               font-weight: 600;
               border: none;
               cursor: pointer;
-            "
-          >
-            ➕ Benutzer hinzufügen
-          </button>
-        </form>
+            ">
+          ➕ Benutzer hinzufügen
+        </button>
+      </form>
 
-        <!-- Benutzerliste -->
-        <ul
-          style="
+      <!-- Benutzerliste -->
+      <ul style="
             list-style: none;
             padding: 0;
             margin: 0;
             display: flex;
             flex-direction: column;
             gap: 10px;
-          "
-        >
-          {% for u in users %} {% if u != "admin" %}
-          <li
-            style="
+          ">
+        {% for u in users %} {% if u != "admin" %}
+        <li style="
               background: #f9f9f9;
               padding: 12px;
               border-radius: 14px;
@@ -752,14 +704,11 @@
               justify-content: space-between;
               align-items: center;
               box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-            "
-          >
-            <span style="font-weight: 500">{{ u }}</span>
-            <form method="POST" style="margin: 0">
-              <input type="hidden" name="delete_user" value="{{ u }}" />
-              <button
-                type="submit"
-                style="
+            ">
+          <span style="font-weight: 500">{{ u }}</span>
+          <form method="POST" style="margin: 0">
+            <input type="hidden" name="delete_user" value="{{ u }}" />
+            <button type="submit" style="
                   border: 2px solid red;
                   background: white;
                   color: red;
@@ -767,351 +716,360 @@
                   padding: 6px 12px;
                   cursor: pointer;
                   font-weight: 600;
-                "
-              >
-                🗑️ Löschen
-              </button>
-            </form>
-          </li>
-          {% endif %} {% endfor %}
-        </ul>
+                ">
+              🗑️ Löschen
+            </button>
+          </form>
+        </li>
+        {% endif %} {% endfor %}
+      </ul>
 
-        <!-- Schließen -->
-        <div style="text-align: center; margin-top: 20px">
-          <button
-            type="button"
-            id="devCloseBtn"
-            style="
+      <!-- Schließen -->
+      <div style="text-align: center; margin-top: 20px">
+        <button type="button" id="devCloseBtn" style="
               padding: 10px 20px;
               background: #eee;
               border-radius: 12px;
               font-weight: 600;
               border: none;
               cursor: pointer;
-            "
-          >
-            ❌ Schließen
-          </button>
-        </div>
+            ">
+          ❌ Schließen
+        </button>
       </div>
     </div>
+  </div>
 
-    <script>
-      // Schließen per Button
-      (function () {
-        const overlay = document.getElementById("devOverlay");
-        const closeBtn = document.getElementById("devCloseBtn");
+  <script>
+    // Schließen per Button
+    (function () {
+      const overlay = document.getElementById("devOverlay");
+      const closeBtn = document.getElementById("devCloseBtn");
 
-        function closeOverlay() {
-          if (overlay) overlay.remove(); // alternativ: overlay.style.display = 'none';
-        }
+      function closeOverlay() {
+        if (overlay) overlay.remove(); // alternativ: overlay.style.display = 'none';
+      }
 
-        if (closeBtn) closeBtn.addEventListener("click", closeOverlay);
+      if (closeBtn) closeBtn.addEventListener("click", closeOverlay);
 
-        // Klick auf den abgedunkelten Hintergrund schließt
-        if (overlay)
-          overlay.addEventListener("click", function (e) {
-            if (e.target === overlay) closeOverlay();
-          });
-
-        // ESC zum Schließen
-        document.addEventListener("keydown", function (e) {
-          if (e.key === "Escape") closeOverlay();
+      // Klick auf den abgedunkelten Hintergrund schließt
+      if (overlay)
+        overlay.addEventListener("click", function (e) {
+          if (e.target === overlay) closeOverlay();
         });
-      })();
-    </script>
-    {% endif %}
 
-    <!-- Edit Modal -->
-    <div class="modal" id="editModal">
-      <div class="modal-content">
-        <h2>Produkt bearbeiten</h2>
-        <form method="POST">
-          <input type="hidden" name="edit_index" id="editIndex" />
-          <input type="text" name="edit_name" id="editName" required />
-          <button type="submit" name="edit">💾 Speichern</button>
-        </form>
-        <button class="close-btn" onclick="closeModal()">✖ Schließen</button>
-      </div>
+      // ESC zum Schließen
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeOverlay();
+      });
+    })();
+  </script>
+  {% endif %}
+
+  <!-- Edit Modal -->
+  <div class="modal" id="editModal">
+    <div class="modal-content">
+      <h2>Produkt bearbeiten</h2>
+      <form method="POST">
+        <input type="hidden" name="edit_index" id="editIndex" />
+        <input type="text" name="edit_name" id="editName" required />
+        <button type="submit" name="edit">💾 Speichern</button>
+      </form>
+      <button class="close-btn" onclick="closeModal()">✖ Schließen</button>
     </div>
+  </div>
 
-    <!-- AI Recipe Modal -->
-    <div class="modal" id="recipeModal">
-      <div
-        class="modal-content"
-        style="
+  <!-- AI Recipe Modal -->
+  <div class="modal" id="recipeModal">
+    <div class="modal-content" style="
           max-width: 600px;
           text-align: left;
           max-height: 90vh;
           overflow-y: auto;
-        "
-      >
-        <h2 style="text-align: center">
-          <img
-            class="kitchenai-icon"
-            src="/static/icons/kitchai-inverted.png"
-            alt=""
-          />
-          KitchenAI
-        </h2>
-        <div id="recipeContent" style="margin: 20px 0; line-height: 1.6">
-          <p style="text-align: center; color: #666">Laden...</p>
+        ">
+      <h2 style="text-align: center">
+        <img class="kitchenai-icon" src="/static/icons/kitchai-inverted.png" alt="" />
+        KitchenAI
+      </h2>
+      <div id="recipeContent" style="margin: 20px 0; line-height: 1.6">
+        <p style="text-align: center; color: #666">Laden...</p>
+      </div>
+      <button class="close-btn" onclick="closeRecipeModal()">
+        ✖ Schließen
+      </button>
+    </div>
+  </div>
+
+  <!-- Recipe Book Modal -->
+  <div class="recipe-book-modal" id="recipeBookModal">
+    <div class="recipe-book">
+      <div class="recipe-book-header">
+        📖 Mein Rezeptbuch
+      </div>
+      <div class="recipe-book-content" id="recipeBookContent">
+        <!-- Recipes will be loaded here -->
+      </div>
+      <div class="recipe-navigation">
+        <button class="recipe-nav-btn" id="prevPageBtn">◄ Zurück</button>
+        <span class="recipe-page-info" id="pageInfo">Seite 1 von 1</span>
+        <button class="recipe-nav-btn" id="nextPageBtn">Weiter ►</button>
+      </div>
+      <div style="text-align: center; padding: 10px; background: var(--card-bg);">
+        <button class="close-btn" onclick="closeRecipeBook()">✖ Schließen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal" id="settingsModal">
+    <div class="modal-content" style="max-width: 500px; text-align: left;">
+      <h2 style="text-align: center; color: var(--text-primary);">⚙️ Einstellungen</h2>
+
+      <!-- Appearance Settings -->
+      <div style="margin: 20px 0;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--text-primary);">🎨 Darstellung</h3>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="appearance-btn" data-theme="light"
+            style="flex: 1; min-width: 100px; padding: 12px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--card-bg); color: var(--text-primary); cursor: pointer; font-weight: 600; transition: all 0.2s;">
+            ☀️ Hell
+          </button>
+          <button class="appearance-btn" data-theme="dark"
+            style="flex: 1; min-width: 100px; padding: 12px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--card-bg); color: var(--text-primary); cursor: pointer; font-weight: 600; transition: all 0.2s;">
+            🌙 Dunkel
+          </button>
+          <button class="appearance-btn" data-theme="auto"
+            style="flex: 1; min-width: 100px; padding: 12px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--card-bg); color: var(--text-primary); cursor: pointer; font-weight: 600; transition: all 0.2s;">
+            🔄 Auto
+          </button>
         </div>
-        <button class="close-btn" onclick="closeRecipeModal()">
-          ✖ Schließen
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px;">Auto folgt deiner
+          Systemeinstellung</p>
+      </div>
+
+      <!-- Password Change -->
+      <div style="margin: 20px 0;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--text-primary);">🔒 Passwort ändern</h3>
+        <div id="passwordChangeForm">
+          <input type="password" id="currentPassword" placeholder="Aktuelles Passwort"
+            style="width: 100%; margin: 8px 0; padding: 12px; border-radius: 12px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary);" />
+          <input type="password" id="newPassword" placeholder="Neues Passwort"
+            style="width: 100%; margin: 8px 0; padding: 12px; border-radius: 12px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary);" />
+          <input type="password" id="confirmPassword" placeholder="Passwort bestätigen"
+            style="width: 100%; margin: 8px 0; padding: 12px; border-radius: 12px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary);" />
+          <button id="changePasswordBtn"
+            style="width: 100%; margin: 8px 0; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(to right, var(--accent-blue), var(--accent-cyan)); color: white; font-weight: 600; cursor: pointer;">
+            💾 Passwort ändern
+          </button>
+          <div id="passwordMessage" style="margin-top: 10px; padding: 10px; border-radius: 8px; display: none;"></div>
+        </div>
+      </div>
+
+      <!-- Diet and Allergies -->
+      <div style="margin: 20px 0;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--text-primary);">🍎 Ernährung und Allergien</h3>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Gib hier an, was du verträgst
+          oder welche Ernährung du bevorzugst. KitchenAI berücksichtigt das bei Rezepten.</p>
+        <textarea id="dietPreferences"
+          placeholder="Ernährung und Allergien (z. B. Vegan, keine Erdnüsse, Laktoseintoleranz...)"
+          style="width: 100%; height: 100px; padding: 12px; border-radius: 12px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
+        <button id="saveDietBtn"
+          style="width: 100%; margin-top: 12px; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(to right, var(--accent-orange), var(--accent-red)); color: white; font-weight: 600; cursor: pointer;">
+          💾 Ernährung speichern
         </button>
+        <div id="dietMessage" style="margin-top: 10px; padding: 10px; border-radius: 8px; display: none;"></div>
       </div>
+
+      <button class="close-btn" onclick="closeSettingsModal()">✖ Schließen</button>
     </div>
+  </div>
 
-    <!-- Recipe Book Modal -->
-    <div class="recipe-book-modal" id="recipeBookModal">
-      <div class="recipe-book">
-        <div class="recipe-book-header">
-          📖 Mein Rezeptbuch
-        </div>
-        <div class="recipe-book-content" id="recipeBookContent">
-          <!-- Recipes will be loaded here -->
-        </div>
-        <div class="recipe-navigation">
-          <button class="recipe-nav-btn" id="prevPageBtn">◄ Zurück</button>
-          <span class="recipe-page-info" id="pageInfo">Seite 1 von 1</span>
-          <button class="recipe-nav-btn" id="nextPageBtn">Weiter ►</button>
-        </div>
-        <div style="text-align: center; padding: 10px; background: var(--card-bg);">
-          <button class="close-btn" onclick="closeRecipeBook()">✖ Schließen</button>
-        </div>
-      </div>
-    </div>
+  <script>
+    // Dark Mode Toggle
+    (function () {
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+      const themeText = document.getElementById("themeText");
+      const html = document.documentElement;
 
-    <!-- Settings Modal -->
-    <div class="modal" id="settingsModal">
-      <div class="modal-content" style="max-width: 500px; text-align: left;">
-        <h2 style="text-align: center; color: var(--text-primary);">⚙️ Einstellungen</h2>
+      // Load saved theme or default to auto
+      const savedTheme = localStorage.getItem("theme") || "auto";
 
-        <!-- Appearance Settings -->
-        <div style="margin: 20px 0;">
-          <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--text-primary);">🎨 Darstellung</h3>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="appearance-btn" data-theme="light" style="flex: 1; min-width: 100px; padding: 12px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--card-bg); color: var(--text-primary); cursor: pointer; font-weight: 600; transition: all 0.2s;">
-              ☀️ Hell
-            </button>
-            <button class="appearance-btn" data-theme="dark" style="flex: 1; min-width: 100px; padding: 12px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--card-bg); color: var(--text-primary); cursor: pointer; font-weight: 600; transition: all 0.2s;">
-              🌙 Dunkel
-            </button>
-            <button class="appearance-btn" data-theme="auto" style="flex: 1; min-width: 100px; padding: 12px; border-radius: 12px; border: 2px solid var(--input-border); background: var(--card-bg); color: var(--text-primary); cursor: pointer; font-weight: 600; transition: all 0.2s;">
-              🔄 Auto
-            </button>
-          </div>
-          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px;">Auto folgt deiner Systemeinstellung</p>
-        </div>
+      // Apply initial theme
+      if (savedTheme === "auto") {
+        const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        html.setAttribute("data-theme", systemPrefersDark ? "dark" : "light");
+        updateThemeButton(systemPrefersDark ? "dark" : "light");
+      } else {
+        html.setAttribute("data-theme", savedTheme);
+        updateThemeButton(savedTheme);
+      }
 
-        <!-- Password Change -->
-        <div style="margin: 20px 0;">
-          <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--text-primary);">🔒 Passwort ändern</h3>
-          <div id="passwordChangeForm">
-            <input type="password" id="currentPassword" placeholder="Aktuelles Passwort" style="width: 100%; margin: 8px 0; padding: 12px; border-radius: 12px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary);" />
-            <input type="password" id="newPassword" placeholder="Neues Passwort" style="width: 100%; margin: 8px 0; padding: 12px; border-radius: 12px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary);" />
-            <input type="password" id="confirmPassword" placeholder="Passwort bestätigen" style="width: 100%; margin: 8px 0; padding: 12px; border-radius: 12px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary);" />
-            <button id="changePasswordBtn" style="width: 100%; margin: 8px 0; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(to right, var(--accent-blue), var(--accent-cyan)); color: white; font-weight: 600; cursor: pointer;">
-              💾 Passwort ändern
-            </button>
-            <div id="passwordMessage" style="margin-top: 10px; padding: 10px; border-radius: 8px; display: none;"></div>
-          </div>
-        </div>
-
-        <button class="close-btn" onclick="closeSettingsModal()">✖ Schließen</button>
-      </div>
-    </div>
-
-    <script>
-      // Dark Mode Toggle
-      (function() {
-        const themeToggle = document.getElementById("themeToggle");
-        const themeIcon = document.getElementById("themeIcon");
-        const themeText = document.getElementById("themeText");
-        const html = document.documentElement;
-
-        // Load saved theme or default to auto
-        const savedTheme = localStorage.getItem("theme") || "auto";
-
-        // Apply initial theme
-        if (savedTheme === "auto") {
-          const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-          html.setAttribute("data-theme", systemPrefersDark ? "dark" : "light");
-          updateThemeButton(systemPrefersDark ? "dark" : "light");
+      function updateThemeButton(theme) {
+        if (theme === "dark") {
+          themeIcon.textContent = "☀️";
+          themeText.textContent = "Light";
         } else {
-          html.setAttribute("data-theme", savedTheme);
-          updateThemeButton(savedTheme);
+          themeIcon.textContent = "🌙";
+          themeText.textContent = "Dark";
         }
+      }
 
-        function updateThemeButton(theme) {
-          if (theme === "dark") {
-            themeIcon.textContent = "☀️";
-            themeText.textContent = "Light";
-          } else {
-            themeIcon.textContent = "🌙";
-            themeText.textContent = "Dark";
+      themeToggle?.addEventListener("click", function () {
+        const currentTheme = html.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        html.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateThemeButton(newTheme);
+      });
+    })();
+
+    // Color-code products by expiration date
+    (function () {
+      function updateProductColors() {
+        const produkte = document.querySelectorAll(".produkt");
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        produkte.forEach(produkt => {
+          const ablaufStr = produkt.dataset.ablauf;
+          if (!ablaufStr) return;
+
+          const ablaufDate = new Date(ablaufStr);
+          ablaufDate.setHours(0, 0, 0, 0);
+
+          const timeDiff = ablaufDate - today;
+          const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+          // Remove existing classes
+          produkt.classList.remove("expiring-soon", "expired-soon");
+
+          // Apply color coding
+          if (daysDiff < 0) {
+            // Already expired
+            produkt.classList.add("expired-soon");
+          } else if (daysDiff < 7) {
+            // Less than 1 week - RED
+            produkt.classList.add("expired-soon");
+          } else if (daysDiff >= 7 && daysDiff <= 14) {
+            // 1-2 weeks - ORANGE
+            produkt.classList.add("expiring-soon");
           }
-        }
-
-        themeToggle?.addEventListener("click", function() {
-          const currentTheme = html.getAttribute("data-theme");
-          const newTheme = currentTheme === "dark" ? "light" : "dark";
-          html.setAttribute("data-theme", newTheme);
-          localStorage.setItem("theme", newTheme);
-          updateThemeButton(newTheme);
         });
-      })();
-
-      // Color-code products by expiration date
-      (function() {
-        function updateProductColors() {
-          const produkte = document.querySelectorAll(".produkt");
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-
-          produkte.forEach(produkt => {
-            const ablaufStr = produkt.dataset.ablauf;
-            if (!ablaufStr) return;
-
-            const ablaufDate = new Date(ablaufStr);
-            ablaufDate.setHours(0, 0, 0, 0);
-
-            const timeDiff = ablaufDate - today;
-            const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-
-            // Remove existing classes
-            produkt.classList.remove("expiring-soon", "expired-soon");
-
-            // Apply color coding
-            if (daysDiff < 0) {
-              // Already expired
-              produkt.classList.add("expired-soon");
-            } else if (daysDiff < 7) {
-              // Less than 1 week - RED
-              produkt.classList.add("expired-soon");
-            } else if (daysDiff >= 7 && daysDiff <= 14) {
-              // 1-2 weeks - ORANGE
-              produkt.classList.add("expiring-soon");
-            }
-          });
-        }
-
-        // Update colors on page load
-        updateProductColors();
-
-        // Update colors when products are filtered (search)
-        const observer = new MutationObserver(updateProductColors);
-        const produktListe = document.getElementById("produktListe");
-        if (produktListe) {
-          observer.observe(produktListe, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeFilter: ["style"]
-          });
-        }
-      })();
-
-      // Barcode Scanner
-      function onScanSuccess(decodedText) {
-        const barcodeInput = document.getElementById("barcode");
-        barcodeInput.value = decodedText;
-        document.querySelector('input[name="ablauf"]').focus();
-        html5QrcodeScanner.clear();
       }
-      function onScanFailure(error) {}
-      let html5QrcodeScanner = new Html5Qrcode("reader");
-      html5QrcodeScanner
-        .start(
-          { facingMode: "environment" },
-          { fps: 10, qrbox: 250 },
-          onScanSuccess,
-          onScanFailure
-        )
-        .catch((err) => {
-          document.getElementById("reader").innerHTML =
-            "<p style='color:red;text-align:center;'>Kamera nicht verfügbar</p>";
-        });
 
-      // Live-Suche
-      document.getElementById("suche")?.addEventListener("input", function () {
-        let filter = this.value.toLowerCase();
-        document.querySelectorAll(".produkt").forEach((p) => {
-          let name = p.querySelector(".produkt-name").textContent.toLowerCase();
-          p.style.display = name.includes(filter) ? "flex" : "none";
-        });
-      });
+      // Update colors on page load
+      updateProductColors();
 
-      // Edit Modal
-      const modal = document.getElementById("editModal");
-      const editNameInput = document.getElementById("editName");
-      const editIndexInput = document.getElementById("editIndex");
-      document.querySelectorAll(".produkt")?.forEach((p) => {
-        p.addEventListener("click", (e) => {
-          if (e.target.closest("form")) return;
-          editNameInput.value = p.dataset.name;
-          editIndexInput.value = p.dataset.index;
-          modal.style.display = "flex";
+      // Update colors when products are filtered (search)
+      const observer = new MutationObserver(updateProductColors);
+      const produktListe = document.getElementById("produktListe");
+      if (produktListe) {
+        observer.observe(produktListe, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ["style"]
         });
-      });
-      function closeModal() {
-        modal.style.display = "none";
       }
-      window.onclick = (event) => {
-        if (event.target == modal) closeModal();
-      };
+    })();
 
-      // Plus Button
-      const manualBtn = document.getElementById("manualBtn");
-      const manualName = document.getElementById("manualName");
+    // Barcode Scanner
+    function onScanSuccess(decodedText) {
       const barcodeInput = document.getElementById("barcode");
-      const form = document.getElementById("form");
-
-      manualBtn?.addEventListener("click", () => {
-        if (manualName.style.display === "none" || manualName.style.display === "") {
-          manualName.style.display = "block";
-          barcodeInput.disabled = true;
-          manualName.focus();
-        } else {
-          manualName.style.display = "none";
-          barcodeInput.disabled = false;
-          barcodeInput.focus();
-        }
-      });
-      form?.addEventListener("submit", function () {
-        const manualValue = manualName.value.trim();
-        if (manualValue) {
-          barcodeInput.value = manualValue;
-        }
+      barcodeInput.value = decodedText;
+      document.querySelector('input[name="ablauf"]').focus();
+      html5QrcodeScanner.clear();
+    }
+    function onScanFailure(error) { }
+    let html5QrcodeScanner = new Html5Qrcode("reader");
+    html5QrcodeScanner
+      .start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 250 },
+        onScanSuccess,
+        onScanFailure
+      )
+      .catch((err) => {
+        document.getElementById("reader").innerHTML =
+          "<p style='color:red;text-align:center;'>Kamera nicht verfügbar</p>";
       });
 
-      // AI Recipe Generator
-      const recipeModal = document.getElementById("recipeModal");
-      const recipeContent = document.getElementById("recipeContent");
-      const aiRecipeBtn = document.getElementById("aiRecipeBtn");
+    // Live-Suche
+    document.getElementById("suche")?.addEventListener("input", function () {
+      let filter = this.value.toLowerCase();
+      document.querySelectorAll(".produkt").forEach((p) => {
+        let name = p.querySelector(".produkt-name").textContent.toLowerCase();
+        p.style.display = name.includes(filter) ? "flex" : "none";
+      });
+    });
 
-      function closeRecipeModal() {
-        recipeModal.style.display = "none";
+    // Edit Modal
+    const modal = document.getElementById("editModal");
+    const editNameInput = document.getElementById("editName");
+    const editIndexInput = document.getElementById("editIndex");
+    document.querySelectorAll(".produkt")?.forEach((p) => {
+      p.addEventListener("click", (e) => {
+        if (e.target.closest("form")) return;
+        editNameInput.value = p.dataset.name;
+        editIndexInput.value = p.dataset.index;
+        modal.style.display = "flex";
+      });
+    });
+    function closeModal() {
+      modal.style.display = "none";
+    }
+    window.onclick = (event) => {
+      if (event.target == modal) closeModal();
+    };
+
+    // Plus Button
+    const manualBtn = document.getElementById("manualBtn");
+    const manualName = document.getElementById("manualName");
+    const barcodeInput = document.getElementById("barcode");
+    const form = document.getElementById("form");
+
+    manualBtn?.addEventListener("click", () => {
+      if (manualName.style.display === "none" || manualName.style.display === "") {
+        manualName.style.display = "block";
+        barcodeInput.disabled = true;
+        manualName.focus();
+      } else {
+        manualName.style.display = "none";
+        barcodeInput.disabled = false;
+        barcodeInput.focus();
       }
+    });
+    form?.addEventListener("submit", function () {
+      const manualValue = manualName.value.trim();
+      if (manualValue) {
+        barcodeInput.value = manualValue;
+      }
+    });
 
-      aiRecipeBtn?.addEventListener("click", async function () {
-        recipeModal.style.display = "flex";
-        recipeContent.innerHTML =
-          '<p style="text-align: center; color: #666;">🔄 Generiere Rezept...</p>';
+    // AI Recipe Generator
+    const recipeModal = document.getElementById("recipeModal");
+    const recipeContent = document.getElementById("recipeContent");
+    const aiRecipeBtn = document.getElementById("aiRecipeBtn");
 
-        try {
-          const response = await fetch("/api/generate-recipe");
-          const data = await response.json();
+    function closeRecipeModal() {
+      recipeModal.style.display = "none";
+    }
 
-          if (data.success) {
-            recipeContent.innerHTML = `
-          <h3 style="color: #ff6b6b; margin-bottom: 10px;">📖 ${
-            data.recipe.title
-          }</h3>
-          <p style="color: #666; font-style: italic; margin-bottom: 15px;">${
-            data.recipe.description
-          }</p>
+    aiRecipeBtn?.addEventListener("click", async function () {
+      recipeModal.style.display = "flex";
+      recipeContent.innerHTML =
+        '<p style="text-align: center; color: #666;">🔄 Generiere Rezept...</p>';
+
+      try {
+        const response = await fetch("/api/generate-recipe");
+        const data = await response.json();
+
+        if (data.success) {
+          recipeContent.innerHTML = `
+          <h3 style="color: #ff6b6b; margin-bottom: 10px;">📖 ${data.recipe.title
+            }</h3>
+          <p style="color: #666; font-style: italic; margin-bottom: 15px;">${data.recipe.description
+            }</p>
 
           <h4 style="color: #333; margin-top: 20px;">🥘 Zutaten:</h4>
           <ul style="list-style: none; padding-left: 0;">
@@ -1135,229 +1093,289 @@
             <strong>👥 Portionen:</strong> ${data.recipe.servings}
           </p>
         `;
-          } else {
-            recipeContent.innerHTML = `<p style="color: red; text-align: center;">${data.message}</p>`;
-          }
-        } catch (error) {
-          recipeContent.innerHTML =
-            '<p style="color: red; text-align: center;">Fehler beim Generieren des Rezepts. Bitte versuchen Sie es später erneut.</p>';
+        } else {
+          recipeContent.innerHTML = `<p style="color: red; text-align: center;">${data.message}</p>`;
+        }
+      } catch (error) {
+        recipeContent.innerHTML =
+          '<p style="color: red; text-align: center;">Fehler beim Generieren des Rezepts. Bitte versuchen Sie es später erneut.</p>';
+      }
+    });
+
+    window.onclick = (event) => {
+      if (event.target == modal) closeModal();
+      if (event.target == recipeModal) closeRecipeModal();
+      if (event.target == settingsModal) closeSettingsModal();
+    };
+
+    // Settings Modal
+    const settingsModal = document.getElementById("settingsModal");
+    const settingsLink = document.getElementById("settingsLink");
+
+    function closeSettingsModal() {
+      settingsModal.style.display = "none";
+      // Reset form
+      document.getElementById("currentPassword").value = "";
+      document.getElementById("newPassword").value = "";
+      document.getElementById("confirmPassword").value = "";
+      document.getElementById("passwordMessage").style.display = "none";
+      document.getElementById("dietMessage").style.display = "none";
+    }
+
+    settingsLink?.addEventListener("click", async function (e) {
+      e.preventDefault();
+      settingsModal.style.display = "flex";
+      updateAppearanceButtons();
+      await loadDietPreferences();
+    });
+
+    async function loadDietPreferences() {
+      const dietTextarea = document.getElementById("dietPreferences");
+      const dietMessage = document.getElementById("dietMessage");
+      dietMessage.style.display = "none";
+
+      try {
+        const response = await fetch("/api/get-diet");
+        const data = await response.json();
+        if (data.success) {
+          dietTextarea.value = data.diet || "";
+        }
+      } catch (error) {
+        console.error("Fehler beim Laden der Ernährungseinstellungen:", error);
+      }
+    }
+
+    // Appearance Buttons
+    const appearanceBtns = document.querySelectorAll(".appearance-btn");
+
+    function updateAppearanceButtons() {
+      const currentTheme = localStorage.getItem("theme") || "auto";
+      appearanceBtns.forEach(btn => {
+        if (btn.dataset.theme === currentTheme) {
+          btn.style.border = "2px solid var(--accent-blue)";
+          btn.style.background = "linear-gradient(to right, var(--accent-blue), var(--accent-cyan))";
+          btn.style.color = "white";
+        } else {
+          btn.style.border = "2px solid var(--input-border)";
+          btn.style.background = "var(--card-bg)";
+          btn.style.color = "var(--text-primary)";
         }
       });
+    }
 
-      window.onclick = (event) => {
-        if (event.target == modal) closeModal();
-        if (event.target == recipeModal) closeRecipeModal();
-        if (event.target == settingsModal) closeSettingsModal();
-      };
+    appearanceBtns.forEach(btn => {
+      btn.addEventListener("click", function () {
+        const theme = this.dataset.theme;
+        localStorage.setItem("theme", theme);
 
-      // Settings Modal
-      const settingsModal = document.getElementById("settingsModal");
-      const settingsLink = document.getElementById("settingsLink");
-
-      function closeSettingsModal() {
-        settingsModal.style.display = "none";
-        // Reset form
-        document.getElementById("currentPassword").value = "";
-        document.getElementById("newPassword").value = "";
-        document.getElementById("confirmPassword").value = "";
-        document.getElementById("passwordMessage").style.display = "none";
-      }
-
-      settingsLink?.addEventListener("click", function(e) {
-        e.preventDefault();
-        settingsModal.style.display = "flex";
-        updateAppearanceButtons();
-      });
-
-      // Appearance Buttons
-      const appearanceBtns = document.querySelectorAll(".appearance-btn");
-
-      function updateAppearanceButtons() {
-        const currentTheme = localStorage.getItem("theme") || "auto";
-        appearanceBtns.forEach(btn => {
-          if (btn.dataset.theme === currentTheme) {
-            btn.style.border = "2px solid var(--accent-blue)";
-            btn.style.background = "linear-gradient(to right, var(--accent-blue), var(--accent-cyan))";
-            btn.style.color = "white";
-          } else {
-            btn.style.border = "2px solid var(--input-border)";
-            btn.style.background = "var(--card-bg)";
-            btn.style.color = "var(--text-primary)";
-          }
-        });
-      }
-
-      appearanceBtns.forEach(btn => {
-        btn.addEventListener("click", function() {
-          const theme = this.dataset.theme;
-          localStorage.setItem("theme", theme);
-
-          if (theme === "auto") {
-            // Follow system preference
-            const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-            document.documentElement.setAttribute("data-theme", systemPrefersDark ? "dark" : "light");
-            // Update theme toggle button
-            const themeToggle = document.getElementById("themeToggle");
-            if (themeToggle) {
-              document.getElementById("themeIcon").textContent = systemPrefersDark ? "☀️" : "🌙";
-              document.getElementById("themeText").textContent = systemPrefersDark ? "Light" : "Dark";
-            }
-          } else {
-            document.documentElement.setAttribute("data-theme", theme);
-            // Update theme toggle button
-            const themeToggle = document.getElementById("themeToggle");
-            if (themeToggle) {
-              document.getElementById("themeIcon").textContent = theme === "dark" ? "☀️" : "🌙";
-              document.getElementById("themeText").textContent = theme === "dark" ? "Light" : "Dark";
-            }
-          }
-
-          updateAppearanceButtons();
-        });
-      });
-
-      // Watch system theme changes when in auto mode
-      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-        const theme = localStorage.getItem("theme") || "auto";
         if (theme === "auto") {
-          document.documentElement.setAttribute("data-theme", e.matches ? "dark" : "light");
+          // Follow system preference
+          const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.setAttribute("data-theme", systemPrefersDark ? "dark" : "light");
+          // Update theme toggle button
           const themeToggle = document.getElementById("themeToggle");
           if (themeToggle) {
-            document.getElementById("themeIcon").textContent = e.matches ? "☀️" : "🌙";
-            document.getElementById("themeText").textContent = e.matches ? "Light" : "Dark";
+            document.getElementById("themeIcon").textContent = systemPrefersDark ? "☀️" : "🌙";
+            document.getElementById("themeText").textContent = systemPrefersDark ? "Light" : "Dark";
+          }
+        } else {
+          document.documentElement.setAttribute("data-theme", theme);
+          // Update theme toggle button
+          const themeToggle = document.getElementById("themeToggle");
+          if (themeToggle) {
+            document.getElementById("themeIcon").textContent = theme === "dark" ? "☀️" : "🌙";
+            document.getElementById("themeText").textContent = theme === "dark" ? "Light" : "Dark";
           }
         }
+
+        updateAppearanceButtons();
       });
+    });
 
-      // Password Change
-      const changePasswordBtn = document.getElementById("changePasswordBtn");
-      const passwordMessage = document.getElementById("passwordMessage");
-
-      changePasswordBtn?.addEventListener("click", async function() {
-        const currentPassword = document.getElementById("currentPassword").value;
-        const newPassword = document.getElementById("newPassword").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
-
-        // Validation
-        if (!currentPassword || !newPassword || !confirmPassword) {
-          showPasswordMessage("Bitte fülle alle Felder aus", "error");
-          return;
-        }
-
-        if (newPassword !== confirmPassword) {
-          showPasswordMessage("Die Passwörter stimmen nicht überein", "error");
-          return;
-        }
-
-        if (newPassword.length < 3) {
-          showPasswordMessage("Das Passwort muss mindestens 3 Zeichen lang sein", "error");
-          return;
-        }
-
-        try {
-          const response = await fetch("/api/change-password", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              current_password: currentPassword,
-              new_password: newPassword
-            })
-          });
-
-          const data = await response.json();
-
-          if (data.success) {
-            showPasswordMessage(data.message, "success");
-            // Clear form
-            document.getElementById("currentPassword").value = "";
-            document.getElementById("newPassword").value = "";
-            document.getElementById("confirmPassword").value = "";
-          } else {
-            showPasswordMessage(data.message, "error");
-          }
-        } catch (error) {
-          showPasswordMessage("Fehler beim Ändern des Passworts", "error");
-        }
-      });
-
-      function showPasswordMessage(message, type) {
-        passwordMessage.textContent = message;
-        passwordMessage.style.display = "block";
-        passwordMessage.style.background = type === "success" ? "#d4edda" : "#f8d7da";
-        passwordMessage.style.color = type === "success" ? "#155724" : "#721c24";
-        passwordMessage.style.border = `1px solid ${type === "success" ? "#c3e6cb" : "#f5c6cb"}`;
-      }
-
-      // Recipe Book
-      const recipeBookModal = document.getElementById("recipeBookModal");
-      const recipeBookContent = document.getElementById("recipeBookContent");
-      const recipeHistoryBtn = document.getElementById("recipeHistoryBtn");
-      const prevPageBtn = document.getElementById("prevPageBtn");
-      const nextPageBtn = document.getElementById("nextPageBtn");
-      const pageInfo = document.getElementById("pageInfo");
-
-      let currentRecipes = [];
-      let currentPage = 0;
-      const recipesPerPage = 2;
-
-      function closeRecipeBook() {
-        recipeBookModal.style.display = "none";
-      }
-
-      recipeHistoryBtn?.addEventListener("click", async function() {
-        recipeBookModal.style.display = "flex";
-        await loadRecipeHistory();
-      });
-
-      async function loadRecipeHistory() {
-        recipeBookContent.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">🔄 Lade Rezepte...</p>';
-
-        try {
-          const response = await fetch("/api/recipe-history");
-          const data = await response.json();
-
-          if (data.success) {
-            currentRecipes = data.recipes;
-            currentPage = 0;
-            renderRecipePage();
-          } else {
-            recipeBookContent.innerHTML = '<div class="recipe-empty">📭 Noch keine Rezepte im Buch.<br><br>Generiere dein erstes Rezept mit KitchenAI!</div>';
-          }
-        } catch (error) {
-          recipeBookContent.innerHTML = '<div class="recipe-empty" style="color: red;">❌ Fehler beim Laden der Rezepte</div>';
+    // Watch system theme changes when in auto mode
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+      const theme = localStorage.getItem("theme") || "auto";
+      if (theme === "auto") {
+        document.documentElement.setAttribute("data-theme", e.matches ? "dark" : "light");
+        const themeToggle = document.getElementById("themeToggle");
+        if (themeToggle) {
+          document.getElementById("themeIcon").textContent = e.matches ? "☀️" : "🌙";
+          document.getElementById("themeText").textContent = e.matches ? "Light" : "Dark";
         }
       }
+    });
 
-      function renderRecipePage() {
-        if (currentRecipes.length === 0) {
+    // Password Change
+    const changePasswordBtn = document.getElementById("changePasswordBtn");
+    const passwordMessage = document.getElementById("passwordMessage");
+
+    changePasswordBtn?.addEventListener("click", async function () {
+      const currentPassword = document.getElementById("currentPassword").value;
+      const newPassword = document.getElementById("newPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      // Validation
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        showPasswordMessage("Bitte fülle alle Felder aus", "error");
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        showPasswordMessage("Die Passwörter stimmen nicht überein", "error");
+        return;
+      }
+
+      if (newPassword.length < 3) {
+        showPasswordMessage("Das Passwort muss mindestens 3 Zeichen lang sein", "error");
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/change-password", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            current_password: currentPassword,
+            new_password: newPassword
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showPasswordMessage(data.message, "success");
+          // Clear form
+          document.getElementById("currentPassword").value = "";
+          document.getElementById("newPassword").value = "";
+          document.getElementById("confirmPassword").value = "";
+        } else {
+          showPasswordMessage(data.message, "error");
+        }
+      } catch (error) {
+        showPasswordMessage("Fehler beim Ändern des Passworts", "error");
+      }
+    });
+
+    function showPasswordMessage(message, type) {
+      passwordMessage.textContent = message;
+      passwordMessage.style.display = "block";
+      passwordMessage.style.background = type === "success" ? "#d4edda" : "#f8d7da";
+      passwordMessage.style.color = type === "success" ? "#155724" : "#721c24";
+      passwordMessage.style.border = `1px solid ${type === "success" ? "#c3e6cb" : "#f5c6cb"}`;
+    }
+
+    // Save Diet Preferences
+    const saveDietBtn = document.getElementById("saveDietBtn");
+    const dietMessage = document.getElementById("dietMessage");
+
+    saveDietBtn?.addEventListener("click", async function () {
+      const diet = document.getElementById("dietPreferences").value;
+
+      try {
+        const response = await fetch("/api/save-diet", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ diet: diet })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showDietMessage(data.message, "success");
+        } else {
+          showDietMessage(data.message, "error");
+        }
+      } catch (error) {
+        showDietMessage("Fehler beim Speichern der Ernährung", "error");
+      }
+    });
+
+    function showDietMessage(message, type) {
+      dietMessage.textContent = message;
+      dietMessage.style.display = "block";
+      dietMessage.style.background = type === "success" ? "#d4edda" : "#f8d7da";
+      dietMessage.style.color = type === "success" ? "#155724" : "#721c24";
+      dietMessage.style.border = `1px solid ${type === "success" ? "#c3e6cb" : "#f5c6cb"}`;
+
+      if (type === "success") {
+        setTimeout(() => {
+          dietMessage.style.display = "none";
+        }, 3000);
+      }
+    }
+
+    // Recipe Book
+    const recipeBookModal = document.getElementById("recipeBookModal");
+    const recipeBookContent = document.getElementById("recipeBookContent");
+    const recipeHistoryBtn = document.getElementById("recipeHistoryBtn");
+    const prevPageBtn = document.getElementById("prevPageBtn");
+    const nextPageBtn = document.getElementById("nextPageBtn");
+    const pageInfo = document.getElementById("pageInfo");
+
+    let currentRecipes = [];
+    let currentPage = 0;
+    const recipesPerPage = 2;
+
+    function closeRecipeBook() {
+      recipeBookModal.style.display = "none";
+    }
+
+    recipeHistoryBtn?.addEventListener("click", async function () {
+      recipeBookModal.style.display = "flex";
+      await loadRecipeHistory();
+    });
+
+    async function loadRecipeHistory() {
+      recipeBookContent.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">🔄 Lade Rezepte...</p>';
+
+      try {
+        const response = await fetch("/api/recipe-history");
+        const data = await response.json();
+
+        if (data.success) {
+          currentRecipes = data.recipes;
+          currentPage = 0;
+          renderRecipePage();
+        } else {
           recipeBookContent.innerHTML = '<div class="recipe-empty">📭 Noch keine Rezepte im Buch.<br><br>Generiere dein erstes Rezept mit KitchenAI!</div>';
-          pageInfo.textContent = "Seite 0 von 0";
-          prevPageBtn.disabled = true;
-          nextPageBtn.disabled = true;
-          return;
         }
+      } catch (error) {
+        recipeBookContent.innerHTML = '<div class="recipe-empty" style="color: red;">❌ Fehler beim Laden der Rezepte</div>';
+      }
+    }
 
-        const startIdx = currentPage * recipesPerPage;
-        const endIdx = Math.min(startIdx + recipesPerPage, currentRecipes.length);
-        const pageRecipes = currentRecipes.slice(startIdx, endIdx);
+    function renderRecipePage() {
+      if (currentRecipes.length === 0) {
+        recipeBookContent.innerHTML = '<div class="recipe-empty">📭 Noch keine Rezepte im Buch.<br><br>Generiere dein erstes Rezept mit KitchenAI!</div>';
+        pageInfo.textContent = "Seite 0 von 0";
+        prevPageBtn.disabled = true;
+        nextPageBtn.disabled = true;
+        return;
+      }
 
-        recipeBookContent.innerHTML = "";
+      const startIdx = currentPage * recipesPerPage;
+      const endIdx = Math.min(startIdx + recipesPerPage, currentRecipes.length);
+      const pageRecipes = currentRecipes.slice(startIdx, endIdx);
 
-        pageRecipes.forEach((recipeData, idx) => {
-          const recipe = recipeData.recipe;
-          const recipeCard = document.createElement("div");
-          recipeCard.className = "recipe-card";
+      recipeBookContent.innerHTML = "";
 
-          const createdDate = new Date(recipeData.created_at);
-          const dateStr = createdDate.toLocaleDateString("de-DE", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
-          });
+      pageRecipes.forEach((recipeData, idx) => {
+        const recipe = recipeData.recipe;
+        const recipeCard = document.createElement("div");
+        recipeCard.className = "recipe-card";
 
-          recipeCard.innerHTML = `
+        const createdDate = new Date(recipeData.created_at);
+        const dateStr = createdDate.toLocaleDateString("de-DE", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric"
+        });
+
+        recipeCard.innerHTML = `
             <div class="recipe-favorite ${recipeData.is_favorite ? 'favorited' : ''}" data-recipe-id="${recipeData.id}">
               ${recipeData.is_favorite ? '⭐' : '☆'}
             </div>
@@ -1381,76 +1399,77 @@
             </div>
           `;
 
-          recipeBookContent.appendChild(recipeCard);
+        recipeBookContent.appendChild(recipeCard);
 
-          // Add favorite toggle listener
-          const favBtn = recipeCard.querySelector(".recipe-favorite");
-          favBtn.addEventListener("click", () => toggleFavorite(recipeData.id, favBtn));
+        // Add favorite toggle listener
+        const favBtn = recipeCard.querySelector(".recipe-favorite");
+        favBtn.addEventListener("click", () => toggleFavorite(recipeData.id, favBtn));
+      });
+
+      // Update pagination
+      const totalPages = Math.ceil(currentRecipes.length / recipesPerPage);
+      pageInfo.textContent = `Seite ${currentPage + 1} von ${totalPages}`;
+      prevPageBtn.disabled = currentPage === 0;
+      nextPageBtn.disabled = currentPage >= totalPages - 1;
+    }
+
+    async function toggleFavorite(recipeId, element) {
+      try {
+        const response = await fetch("/api/toggle-favorite", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ recipe_id: recipeId })
         });
 
-        // Update pagination
-        const totalPages = Math.ceil(currentRecipes.length / recipesPerPage);
-        pageInfo.textContent = `Seite ${currentPage + 1} von ${totalPages}`;
-        prevPageBtn.disabled = currentPage === 0;
-        nextPageBtn.disabled = currentPage >= totalPages - 1;
-      }
+        const data = await response.json();
 
-      async function toggleFavorite(recipeId, element) {
-        try {
-          const response = await fetch("/api/toggle-favorite", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ recipe_id: recipeId })
-          });
-
-          const data = await response.json();
-
-          if (data.success) {
-            // Update UI
-            if (data.is_favorite) {
-              element.classList.add("favorited");
-              element.textContent = "⭐";
-            } else {
-              element.classList.remove("favorited");
-              element.textContent = "☆";
-            }
-
-            // Update local data
-            const recipe = currentRecipes.find(r => r.id === recipeId);
-            if (recipe) {
-              recipe.is_favorite = data.is_favorite;
-            }
+        if (data.success) {
+          // Update UI
+          if (data.is_favorite) {
+            element.classList.add("favorited");
+            element.textContent = "⭐";
+          } else {
+            element.classList.remove("favorited");
+            element.textContent = "☆";
           }
-        } catch (error) {
-          console.error("Error toggling favorite:", error);
+
+          // Update local data
+          const recipe = currentRecipes.find(r => r.id === recipeId);
+          if (recipe) {
+            recipe.is_favorite = data.is_favorite;
+          }
         }
+      } catch (error) {
+        console.error("Error toggling favorite:", error);
       }
+    }
 
-      prevPageBtn?.addEventListener("click", () => {
-        if (currentPage > 0) {
-          currentPage--;
-          renderRecipePage();
-          recipeBookContent.scrollTop = 0;
-        }
-      });
+    prevPageBtn?.addEventListener("click", () => {
+      if (currentPage > 0) {
+        currentPage--;
+        renderRecipePage();
+        recipeBookContent.scrollTop = 0;
+      }
+    });
 
-      nextPageBtn?.addEventListener("click", () => {
-        const totalPages = Math.ceil(currentRecipes.length / recipesPerPage);
-        if (currentPage < totalPages - 1) {
-          currentPage++;
-          renderRecipePage();
-          recipeBookContent.scrollTop = 0;
-        }
-      });
+    nextPageBtn?.addEventListener("click", () => {
+      const totalPages = Math.ceil(currentRecipes.length / recipesPerPage);
+      if (currentPage < totalPages - 1) {
+        currentPage++;
+        renderRecipePage();
+        recipeBookContent.scrollTop = 0;
+      }
+    });
 
-      // Close on background click
-      recipeBookModal?.addEventListener("click", (e) => {
-        if (e.target === recipeBookModal) {
-          closeRecipeBook();
-        }
-      });
-    </script>
-  </body>
+    // Close on background click
+    recipeBookModal?.addEventListener("click", (e) => {
+      if (e.target === recipeBookModal) {
+        closeRecipeBook();
+      }
+    });
+  </script>
+</body>
+
 </html>

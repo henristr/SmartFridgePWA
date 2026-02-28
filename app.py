@@ -39,8 +39,16 @@ def lade_users():
         with open(USER_DATEI, "r", encoding="utf-8") as f:
             data = json.load(f)
             if isinstance(data, dict):
+                # Migration: Falls alte Struktur (String-Passwörter) vorhanden ist
+                migriert = False
+                for uname, udata in data.items():
+                    if isinstance(udata, str):
+                        data[uname] = {"password": udata, "diet": ""}
+                        migriert = True
+                if migriert:
+                    speichere_users(data)
                 return data
-    return {"admin": "admin"}  # Standard-Admin
+    return {"admin": {"password": "admin", "diet": ""}}  # Standard-Admin mit neuer Struktur
 
 
 def speichere_users(users):
@@ -122,11 +130,24 @@ def generiere_rezept(produkte_liste):
             "servings": "N/A",
         }
 
+    # Ermittle Ernährungseinstellungen des Benutzers (falls verfügbar)
+    user_diet = ""
+    if "user" in session:
+        user = session["user"]
+        if user in users:
+            user_diet = users[user].get("diet", "")
+
+    diet_instruction = ""
+    if user_diet:
+        diet_instruction = f"WICHTIG: Berücksichtige folgende Ernährungseinstellungen und Allergien des Benutzers: {user_diet}. Achte darauf, dass KEINE unverträglichen Zutaten im Rezept vorkommen!"
+
     try:
         # Erstelle intelligenten Prompt für Gemini
         prompt = f"""Du bist ein kreativer Koch. Erstelle ein realistisches, kochbares Rezept mit folgenden Zutaten aus dem Kühlschrank:
 
 {zutaten_text}
+
+{diet_instruction}
 
 WICHTIG:
 - Das Rezept MUSS zu den vorhandenen Zutaten passen (z.B. kein Salat mit Burger Buns)
@@ -137,6 +158,8 @@ WICHTIG:
 - Verwende nur Zutaten, die geschmacklich gut zusammenpassen, und lasse alle anderen weg. Versuche nicht, alles auf einmal zu verwenden.
 - Nutze herrkömliche Gerichte und probiere nicht neuem Sachen zu erfinden und probiere nicht alles in Rezept zu quetschen. Richte dich aber bei der Auswahl der Produkte an das Ablaufdatum
 - Es sollen keine Verrückten Kombinationen sein
+- Du darfst, falls Produkte fehlen sie ins Rezept einfügen, aber nur wenn es sinnvoll ist. Markiere diese Produkte dann mit einem Sternchen (*)
+- Wenn aufgrund einer Allergie oder anderen Essgewohnheiten ein Produkt nicht verwendet werden kann, schlage eine Alternative vor, welche ein Ersatzprodukt ist.
 
 Antworte im folgenden JSON-Format (ohne Markdown, nur pures JSON):
 {{
@@ -222,14 +245,20 @@ def index():
         if request.method == "POST":
             username = request.form.get("username", "").strip()
             password = request.form.get("password", "").strip()
-            if username in users and users[username] == password:
-                session["user"] = username
-                if username not in produkte:
-                    produkte[username] = []
-                    speichere_produkte(produkte)
-                return redirect(url_for("index"))
-            else:
-                error = "Falscher Login"
+            
+            # Login-Check mit neuer Struktur
+            if username in users:
+                user_data = users[username]
+                stored_password = user_data["password"] if isinstance(user_data, dict) else user_data
+                
+                if stored_password == password:
+                    session["user"] = username
+                    if username not in produkte:
+                        produkte[username] = []
+                        speichere_produkte(produkte)
+                    return redirect(url_for("index"))
+            
+            error = "Falscher Login"
         return render_template("index.html", login=True, error=error)
 
     # BENUTZER EINGELOGGT
@@ -245,7 +274,7 @@ def index():
             new_user = request.form.get("new_user").strip()
             new_pass = request.form.get("new_pass").strip()
             if new_user and new_pass:
-                users[new_user] = new_pass
+                users[new_user] = {"password": new_pass, "diet": ""}
                 speichere_users(users)
         elif "delete_user" in request.form:
             del_user = request.form.get("delete_user")
@@ -319,7 +348,7 @@ def change_password():
     if not current_password or not new_password:
         return jsonify({"success": False, "message": "Bitte alle Felder ausfüllen"})
 
-    if users.get(user) != current_password:
+    if users.get(user, {}).get("password") != current_password and users.get(user) != current_password:
         return jsonify({"success": False, "message": "Aktuelles Passwort ist falsch"})
 
     if len(new_password) < 3:
@@ -327,9 +356,48 @@ def change_password():
             {"success": False, "message": "Neues Passwort muss mindestens 3 Zeichen lang sein"}
         )
 
-    users[user] = new_password
+    if isinstance(users[user], dict):
+        users[user]["password"] = new_password
+    else:
+        users[user] = {"password": new_password, "diet": ""}
+    
     speichere_users(users)
     return jsonify({"success": True, "message": "Passwort erfolgreich geändert"})
+
+
+@app.route("/api/get-diet")
+def get_diet():
+    """API Endpunkt zum Abrufen der Ernährungseinstellungen"""
+    if "user" not in session:
+        return jsonify({"success": False, "message": "Nicht eingeloggt"}), 401
+    
+    user = session["user"]
+    user_data = users.get(user, {})
+    diet = user_data.get("diet", "") if isinstance(user_data, dict) else ""
+    
+    return jsonify({"success": True, "diet": diet})
+
+
+@app.route("/api/save-diet", methods=["POST"])
+def save_diet():
+    """API Endpunkt zum Speichern der Ernährungseinstellungen"""
+    if "user" not in session:
+        return jsonify({"success": False, "message": "Nicht eingeloggt"}), 401
+    
+    user = session["user"]
+    data = request.get_json()
+    diet = data.get("diet", "").strip()
+    
+    if user not in users:
+        users[user] = {"password": "", "diet": diet}
+    elif isinstance(users[user], dict):
+        users[user]["diet"] = diet
+    else:
+        # Fallback für alte Struktur
+        users[user] = {"password": users[user], "diet": diet}
+        
+    speichere_users(users)
+    return jsonify({"success": True, "message": "Ernährungseinstellungen erfolgreich gespeichert"})
 
 
 @app.route("/api/generate-recipe")
