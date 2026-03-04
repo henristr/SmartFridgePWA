@@ -704,29 +704,56 @@
         </form>
       </div>
 
-      <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
-      <h3 style="text-align: center; margin-bottom: 16px; color: #333; font-size: 1.1rem;">Benutzerverwaltung</h3>
+    </div>
 
-      <!-- Benutzer hinzufügen -->
-      <form method="POST" style="
+    <!-- API Einstellungen -->
+    <div
+      style="background: #fff9f0; padding: 16px; border-radius: 14px; margin-bottom: 20px; border: 1px solid #ffeeba;">
+      <h3 style="margin-top: 0; color: #856404; font-size: 1.1rem; margin-bottom: 12px;">🔑 API Einstellungen</h3>
+
+      <div style="display: flex; gap: 8px;">
+        <input type="text" id="adminApiKey" placeholder="API Key"
+          style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin: 0; background: white; color: #333;" />
+        <button type="button" id="generateApiKeyBtn"
+          style="width: 48px; border-radius: 8px; padding: 0; display: flex; justify-content: center; align-items: center; background: #6c757d; margin: 0;"
+          title="Generieren">
+          🔄
+        </button>
+      </div>
+
+      <button type="button" id="saveApiSettingsBtn"
+        style="padding: 10px; border-radius: 8px; background: #ffc107; color: #212529; border: none; font-weight: 600; cursor: pointer; margin-top: 10px; width: 100%;">
+        💾 API Key Speichern
+      </button>
+      <div id="apiSettingsMsg" style="font-size: 0.85rem; text-align: center; margin-top: 5px;"></div>
+      <p style="font-size: 0.75rem; color: #856404; margin-top: 8px; margin-bottom: 0;">Endpoints:
+        <code>/api/products</code> (Header: <code>API-Key</code>)
+      </p>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+    <h3 style="text-align: center; margin-bottom: 16px; color: #333; font-size: 1.1rem;">Benutzerverwaltung</h3>
+
+    <!-- Benutzer hinzufügen -->
+    <form method="POST" style="
             display: flex;
             flex-direction: column;
             gap: 12px;
             margin-bottom: 16px;
           ">
-        <input type="text" name="new_user" placeholder="Neuer Benutzer" required style="
+      <input type="text" name="new_user" placeholder="Neuer Benutzer" required style="
               padding: 12px;
               border-radius: 14px;
               border: 1px solid #ccc;
               font-size: 1rem;
             " />
-        <input type="password" name="new_pass" placeholder="Passwort" required style="
+      <input type="password" name="new_pass" placeholder="Passwort" required style="
               padding: 12px;
               border-radius: 14px;
               border: 1px solid #ccc;
               font-size: 1rem;
             " />
-        <button type="submit" name="add_user" style="
+      <button type="submit" name="add_user" style="
               padding: 12px;
               border-radius: 14px;
               background: linear-gradient(to right, #4facfe, #00f2fe);
@@ -735,12 +762,12 @@
               border: none;
               cursor: pointer;
             ">
-          ➕ Benutzer hinzufügen
-        </button>
-      </form>
+        ➕ Benutzer hinzufügen
+      </button>
+    </form>
 
-      <!-- Benutzerliste -->
-      <ul style="
+    <!-- Benutzerliste -->
+    <ul style="
             list-style: none;
             padding: 0;
             margin: 0;
@@ -748,8 +775,8 @@
             flex-direction: column;
             gap: 10px;
           ">
-        {% for u in users %} {% if u != "admin" %}
-        <li style="
+      {% for u in users %} {% if u != "admin" %}
+      <li style="
               background: #f9f9f9;
               padding: 12px;
               border-radius: 14px;
@@ -758,10 +785,10 @@
               align-items: center;
               box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
             ">
-          <span style="font-weight: 500">{{ u }}</span>
-          <form method="POST" style="margin: 0">
-            <input type="hidden" name="delete_user" value="{{ u }}" />
-            <button type="submit" style="
+        <span style="font-weight: 500">{{ u }}</span>
+        <form method="POST" style="margin: 0">
+          <input type="hidden" name="delete_user" value="{{ u }}" />
+          <button type="submit" style="
                   border: 2px solid red;
                   background: white;
                   color: red;
@@ -770,16 +797,16 @@
                   cursor: pointer;
                   font-weight: 600;
                 ">
-              🗑️ Löschen
-            </button>
-          </form>
-        </li>
-        {% endif %} {% endfor %}
-      </ul>
+            🗑️ Löschen
+          </button>
+        </form>
+      </li>
+      {% endif %} {% endfor %}
+    </ul>
 
-      <!-- Schließen -->
-      <div style="text-align: center; margin-top: 20px">
-        <button type="button" id="devCloseBtn" style="
+    <!-- Schließen -->
+    <div style="text-align: center; margin-top: 20px">
+      <button type="button" id="devCloseBtn" style="
               padding: 10px 20px;
               background: #eee;
               border-radius: 12px;
@@ -787,10 +814,10 @@
               border: none;
               cursor: pointer;
             ">
-          ❌ Schließen
-        </button>
-      </div>
+        ❌ Schließen
+      </button>
     </div>
+  </div>
   </div>
 
   <script>
@@ -871,6 +898,66 @@
             .catch(e => {
               aiConfigMsg.textContent = "❌ Netzwerkfehler.";
               aiConfigMsg.style.color = "red";
+            });
+        });
+      }
+
+      // API Settings Logic
+      const adminApiKey = document.getElementById("adminApiKey");
+      const generateApiKeyBtn = document.getElementById("generateApiKeyBtn");
+      const saveApiSettingsBtn = document.getElementById("saveApiSettingsBtn");
+      const apiSettingsMsg = document.getElementById("apiSettingsMsg");
+
+      function generateRandomKey(length) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        const array = new Uint32Array(length);
+        window.crypto.getRandomValues(array);
+        for (let i = 0; i < length; i++) {
+          result += chars.charAt(array[i] % chars.length);
+        }
+        return result;
+      }
+
+      if (adminApiKey) {
+        // Load initial settings
+        fetch("/api/admin/api-settings")
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              adminApiKey.value = data.api_key || "";
+            }
+          })
+          .catch(e => console.error("Could not load API Settings", e));
+
+        generateApiKeyBtn.addEventListener("click", () => {
+          adminApiKey.value = generateRandomKey(20);
+        });
+
+        saveApiSettingsBtn.addEventListener("click", () => {
+          const payload = { api_key: adminApiKey.value };
+          apiSettingsMsg.textContent = "Speichere...";
+          apiSettingsMsg.style.color = "#666";
+
+          fetch("/api/admin/api-settings", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                apiSettingsMsg.textContent = "✅ API key gespeichert!";
+                apiSettingsMsg.style.color = "green";
+                setTimeout(() => apiSettingsMsg.textContent = "", 3000);
+              } else {
+                apiSettingsMsg.textContent = "❌ Fehler: " + data.message;
+                apiSettingsMsg.style.color = "red";
+              }
+            })
+            .catch(e => {
+              apiSettingsMsg.textContent = "❌ Netzwerkfehler.";
+              apiSettingsMsg.style.color = "red";
             });
         });
       }

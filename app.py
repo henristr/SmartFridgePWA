@@ -15,6 +15,8 @@ DATEI = "produkte.json"
 USER_DATEI = "users.json"
 REZEPTE_DATEI = "rezepte.json"
 AI_CONFIG_DATEI = "ai_config.json"
+API_CONFIG_DATEI = "config.json"
+
 
 
 # ------------------ PRODUKTE LADEN ------------------
@@ -119,6 +121,28 @@ def speichere_ai_config(config):
         json.dump(config, f, ensure_ascii=False, indent=2)
 
 ai_config = lade_ai_config()
+
+
+# ------------------ API CONFIG LADEN UND SPEICHERN ------------------
+def lade_api_config():
+    if os.path.exists(API_CONFIG_DATEI):
+        try:
+            with open(API_CONFIG_DATEI, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, dict):
+                    return data
+        except:
+            pass
+    return {"api_key": ""}
+
+
+def speichere_api_config(config):
+    with open(API_CONFIG_DATEI, "w", encoding="utf-8") as f:
+        json.dump(config, f, ensure_ascii=False, indent=2)
+
+
+api_config_data = lade_api_config()
+
 
 # ------------------ KI REZEPT GENERATOR ------------------
 
@@ -583,6 +607,48 @@ def api_toggle_favorite():
     return jsonify({"success": False, "message": "Rezept nicht gefunden"})
 
 
+@app.route("/api/admin/api-settings", methods=["GET", "POST"])
+def api_admin_settings():
+    """API Endpunkt für die API Key Einstellungen (Nur Admin)"""
+    if "user" not in session or session["user"] != "admin":
+        return jsonify({"success": False, "message": "Unautorisiert"}), 403
+
+    global api_config_data
+
+    if request.method == "GET":
+        return jsonify({"success": True, "api_key": api_config_data.get("api_key", "")})
+
+    if request.method == "POST":
+        data = request.get_json()
+        api_key = data.get("api_key", "").strip()
+        api_config_data["api_key"] = api_key
+        speichere_api_config(api_config_data)
+        return jsonify({"success": True, "message": "API-Einstellungen gespeichert"})
+
+
+@app.route("/api/products", methods=["GET"])
+def api_external_products():
+    """
+    Externer API-Endpunkt für Produkte.
+    Erwartet Header: API-Key
+    """
+    header_key = request.headers.get("API-Key")
+    stored_key = api_config_data.get("api_key", "")
+
+    # Falls kein Key gesetzt ist oder Key nicht übereinstimmt -> 401
+    if not stored_key or header_key != stored_key:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    # Gebe produkte.json 1:1 zurück
+    if os.path.exists(DATEI):
+        with open(DATEI, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            return jsonify(data)
+    
+    return jsonify({})
+
+
 # ------------------ MAIN ------------------
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
