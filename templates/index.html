@@ -641,28 +641,31 @@
         z-index: 1000;
       ">
     <div style="
-          background: white;
-          width: 90%;
+          background: var(--modal-bg);
+          color: var(--text-primary);
+          width: 95%;
           max-width: 500px;
           border-radius: 20px;
-          padding: 20px;
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+          padding: 24px;
+          box-shadow: 0 10px 30px var(--shadow-dark);
           overflow-y: auto;
-          max-height: 90%;
+          max-height: 90vh;
         " role="dialog" aria-modal="true" aria-labelledby="devTitle">
-      <h2 id="devTitle" style="text-align: center; margin-bottom: 16px; color: #333">
-        Developer Fenster – Benutzerverwaltung
+      <h2 id="devTitle" style="text-align: center; margin-bottom: 24px; color: var(--text-primary)">
+        Developer Fenster – Admin Panel
       </h2>
 
       <!-- AI Provider Einstellungen -->
       <div
-        style="background: #f0f8ff; padding: 16px; border-radius: 14px; margin-bottom: 20px; border: 1px solid #cce5ff;">
-        <h3 style="margin-top: 0; color: #004085; font-size: 1.1rem; margin-bottom: 12px;">🤖 KI-Anbieter konfigurieren
+        style="background: var(--dev-list-bg, #f0f8ff); padding: 18px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--input-border);">
+        <h3 style="margin-top: 0; color: var(--accent-blue); font-size: 1.1rem; margin-bottom: 14px;">🤖 KI-Anbieter
+          konfigurieren
         </h3>
 
         <form id="aiConfigForm" style="display: flex; flex-direction: column; gap: 10px;">
-          <label style="font-weight: 500; font-size: 0.9rem; color: #333;">Provider:</label>
-          <select id="aiProvider" name="provider" style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+          <label style="font-weight: 500; font-size: 0.9rem; color: var(--text-secondary);">Provider:</label>
+          <select id="aiProvider" name="provider"
+            style="padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary);">
             <option value="gemini">Google Gemini AI</option>
             <option value="openai">OpenAI (ChatGPT)</option>
             <option value="ollama">Ollama (Lokal)</option>
@@ -671,19 +674,19 @@
           <!-- Gemini Settings -->
           <div id="aiGeminiSettings" style="display: flex; flex-direction: column; gap: 10px;">
             <input type="password" id="geminiApiKey" name="gemini_api_key" placeholder="Gemini API Key"
-              style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box;" />
+              style="padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); width: 100%; box-sizing: border-box; background: var(--input-bg); color: var(--text-primary);" />
             <input type="text" id="geminiModel" name="gemini_model" placeholder="Model (z.B. gemini-2.5-flash)"
               value="gemini-2.5-flash"
-              style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box;" />
+              style="padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); width: 100%; box-sizing: border-box; background: var(--input-bg); color: var(--text-primary);" />
           </div>
 
           <!-- OpenAI Settings -->
           <div id="aiOpenAISettings" style="display: none; flex-direction: column; gap: 10px;">
             <input type="password" id="openaiApiKey" name="openai_api_key" placeholder="OpenAI API Key"
-              style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box;" />
+              style="padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); width: 100%; box-sizing: border-box; background: var(--input-bg); color: var(--text-primary);" />
             <input type="text" id="openaiModel" name="openai_model" placeholder="Model (z.B. gpt-4o-mini)"
               value="gpt-4o-mini"
-              style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box;" />
+              style="padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); width: 100%; box-sizing: border-box; background: var(--input-bg); color: var(--text-primary);" />
           </div>
 
           <!-- Ollama Settings -->
@@ -691,9 +694,9 @@
             <input type="text" id="ollamaUrl" name="ollama_url"
               placeholder="API URL (z.B. http://localhost:11434/api/generate)"
               value="http://localhost:11434/api/generate"
-              style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box;" />
+              style="padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); width: 100%; box-sizing: border-box; background: var(--input-bg); color: var(--text-primary);" />
             <input type="text" id="ollamaModel" name="ollama_model" placeholder="Model (z.B. llama3.2)" value="llama3.2"
-              style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box;" />
+              style="padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); width: 100%; box-sizing: border-box; background: var(--input-bg); color: var(--text-primary);" />
           </div>
 
           <button type="button" id="aiConfigSaveBtn"
@@ -704,56 +707,60 @@
         </form>
       </div>
 
-    </div>
+      <!-- API Einstellungen -->
+      <div
+        style="background: var(--dev-list-bg, #fff9f0); padding: 18px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--input-border);">
+        <h3 style="margin-top: 0; color: var(--accent-orange); font-size: 1.1rem; margin-bottom: 14px;">🔑 API
+          Einstellungen</h3>
 
-    <!-- API Einstellungen -->
-    <div
-      style="background: #fff9f0; padding: 16px; border-radius: 14px; margin-bottom: 20px; border: 1px solid #ffeeba;">
-      <h3 style="margin-top: 0; color: #856404; font-size: 1.1rem; margin-bottom: 12px;">🔑 API Einstellungen</h3>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="adminApiKey" placeholder="API Key"
+            style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border); margin: 0; background: var(--input-bg); color: var(--text-primary);" />
+          <button type="button" id="generateApiKeyBtn"
+            style="width: 48px; border-radius: 8px; padding: 0; display: flex; justify-content: center; align-items: center; background: #6c757d; margin: 0;"
+            title="Generieren">
+            🔄
+          </button>
+        </div>
 
-      <div style="display: flex; gap: 8px;">
-        <input type="text" id="adminApiKey" placeholder="API Key"
-          style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin: 0; background: white; color: #333;" />
-        <button type="button" id="generateApiKeyBtn"
-          style="width: 48px; border-radius: 8px; padding: 0; display: flex; justify-content: center; align-items: center; background: #6c757d; margin: 0;"
-          title="Generieren">
-          🔄
+        <button type="button" id="saveApiSettingsBtn"
+          style="padding: 10px; border-radius: 8px; background: #ffc107; color: #212529; border: none; font-weight: 600; cursor: pointer; margin-top: 10px; width: 100%;">
+          💾 API Key Speichern
         </button>
+        <div id="apiSettingsMsg" style="font-size: 0.85rem; text-align: center; margin-top: 5px;"></div>
+        <p style="font-size: 0.75rem; color: #856404; margin-top: 8px; margin-bottom: 0;">Endpoints:
+          <code>/api/products</code> (Header: <code>API-Key</code>)
+        </p>
       </div>
 
-      <button type="button" id="saveApiSettingsBtn"
-        style="padding: 10px; border-radius: 8px; background: #ffc107; color: #212529; border: none; font-weight: 600; cursor: pointer; margin-top: 10px; width: 100%;">
-        💾 API Key Speichern
-      </button>
-      <div id="apiSettingsMsg" style="font-size: 0.85rem; text-align: center; margin-top: 5px;"></div>
-      <p style="font-size: 0.75rem; color: #856404; margin-top: 8px; margin-bottom: 0;">Endpoints:
-        <code>/api/products</code> (Header: <code>API-Key</code>)
-      </p>
-    </div>
+      <hr style="border: none; border-top: 1px solid var(--input-border); margin: 24px 0;" />
+      <h3 style="text-align: center; margin-bottom: 18px; color: var(--text-primary); font-size: 1.1rem;">
+        Benutzerverwaltung</h3>
 
-    <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
-    <h3 style="text-align: center; margin-bottom: 16px; color: #333; font-size: 1.1rem;">Benutzerverwaltung</h3>
-
-    <!-- Benutzer hinzufügen -->
-    <form method="POST" style="
+      <!-- Benutzer hinzufügen -->
+      <form method="POST" style="
             display: flex;
             flex-direction: column;
             gap: 12px;
             margin-bottom: 16px;
           ">
-      <input type="text" name="new_user" placeholder="Neuer Benutzer" required style="
+        <input type="text" name="new_user" placeholder="Neuer Benutzer" required style="
               padding: 12px;
               border-radius: 14px;
-              border: 1px solid #ccc;
+              border: 1px solid var(--input-border);
+              background: var(--input-bg);
+              color: var(--text-primary);
               font-size: 1rem;
             " />
-      <input type="password" name="new_pass" placeholder="Passwort" required style="
+        <input type="password" name="new_pass" placeholder="Passwort" required style="
               padding: 12px;
               border-radius: 14px;
-              border: 1px solid #ccc;
+              border: 1px solid var(--input-border);
+              background: var(--input-bg);
+              color: var(--text-primary);
               font-size: 1rem;
             " />
-      <button type="submit" name="add_user" style="
+        <button type="submit" name="add_user" style="
               padding: 12px;
               border-radius: 14px;
               background: linear-gradient(to right, #4facfe, #00f2fe);
@@ -762,12 +769,12 @@
               border: none;
               cursor: pointer;
             ">
-        ➕ Benutzer hinzufügen
-      </button>
-    </form>
+          ➕ Benutzer hinzufügen
+        </button>
+      </form>
 
-    <!-- Benutzerliste -->
-    <ul style="
+      <!-- Benutzerliste -->
+      <ul style="
             list-style: none;
             padding: 0;
             margin: 0;
@@ -775,20 +782,21 @@
             flex-direction: column;
             gap: 10px;
           ">
-      {% for u in users %} {% if u != "admin" %}
-      <li style="
-              background: #f9f9f9;
-              padding: 12px;
+        {% for u in users %} {% if u != "admin" %}
+        <li style="
+              background: var(--dev-list-bg, #f9f9f9);
+              padding: 12px 16px;
               border-radius: 14px;
               display: flex;
               justify-content: space-between;
               align-items: center;
-              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+              box-shadow: 0 2px 6px var(--shadow-light);
+              border: 1px solid var(--input-border);
             ">
-        <span style="font-weight: 500">{{ u }}</span>
-        <form method="POST" style="margin: 0">
-          <input type="hidden" name="delete_user" value="{{ u }}" />
-          <button type="submit" style="
+          <span style="font-weight: 500">{{ u }}</span>
+          <form method="POST" style="margin: 0">
+            <input type="hidden" name="delete_user" value="{{ u }}" />
+            <button type="submit" style="
                   border: 2px solid red;
                   background: white;
                   color: red;
@@ -797,16 +805,16 @@
                   cursor: pointer;
                   font-weight: 600;
                 ">
-            🗑️ Löschen
-          </button>
-        </form>
-      </li>
-      {% endif %} {% endfor %}
-    </ul>
+              🗑️ Löschen
+            </button>
+          </form>
+        </li>
+        {% endif %} {% endfor %}
+      </ul>
 
-    <!-- Schließen -->
-    <div style="text-align: center; margin-top: 20px">
-      <button type="button" id="devCloseBtn" style="
+      <!-- Schließen -->
+      <div style="text-align: center; margin-top: 20px">
+        <button type="button" id="devCloseBtn" style="
               padding: 10px 20px;
               background: #eee;
               border-radius: 12px;
@@ -814,10 +822,10 @@
               border: none;
               cursor: pointer;
             ">
-        ❌ Schließen
-      </button>
+          ❌ Schließen
+        </button>
+      </div>
     </div>
-  </div>
   </div>
 
   <script>
